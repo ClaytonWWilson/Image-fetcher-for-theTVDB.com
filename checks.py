@@ -1,13 +1,20 @@
 import json
+import requests
 
-def getToken(url, data, headers):#TODO add a timeout and try catch to all requests
+def getToken(data):#TODO add a timeout and try catch to all requests
+    url = "https://api.thetvdb.com/login"
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    }
+
     response = requests.post(url, data=json.dumps(data), headers=headers)
     if (checkStatus(response, True)):
         parsed_token = json.loads(response.content)
         token = parsed_token["token"]
         return token
     else:
-        quit()
+        return ""
 
 def checkStatus(response, v):
     if (response.status_code != 200):

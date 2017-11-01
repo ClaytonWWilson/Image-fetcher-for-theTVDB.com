@@ -108,21 +108,6 @@ def tryMissing(missingNums, min, max, idNum, imageType):
 FAN_KEY_TYPE = "?keyType=fanart"# TODO check upper and lower bounds
 POS_KEY_TYPE = "?keyType=poster"
 BAN_KEY_TYPE = "?keyType=series"
-
-url = "https://api.thetvdb.com/login"#TODO change this to LOGIN_URL
-
-data = {
-    "apikey": API_KEY,
-    "userkey": USER_KEY,
-    "username": USER_NAME
-}
-
-headers = {# TODO uppercase this
-    "Content-Type": "application/json",
-    "Accept": "application/json"
-}
-
-
 token = getToken(url, data, headers)# TODO uppercase these
 
 
