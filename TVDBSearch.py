@@ -2,7 +2,7 @@ import requests
 import json
 import urllib.parse
 import os.path
-import shutil
+
 # import login
 
 def searchRemainder(imageType, saveNameList, idNum):#Finds any images missing from the api call in getImages
