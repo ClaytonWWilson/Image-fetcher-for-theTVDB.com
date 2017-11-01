@@ -1,6 +1,7 @@
 import json
 import os.path
 from checks import *
+from actions import *
 import datetime
 import dateutil.parser
 
@@ -60,6 +61,6 @@ def login():
         if checkTimestamp(saveTime, curTime):# token does not need refreshed
             print("token is good")
         else:
-            print("token needs refreshed")
+            refreshToken()
 # TODO try to get token, if token fails, ask for login info again, if it passes save login details to login.py and save token with timestamp.
 # TODO at startup, check token for validity and remove it if it is expired
