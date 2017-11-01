@@ -1,7 +1,7 @@
 import json
 import os.path
 from checks import *
-import time
+import datetime
 
 def login():
     if os.path.exists("login.json") == False:
@@ -39,11 +39,12 @@ def login():
         if tmp_token is "":
             print("Authentication failed. Please try again.")
         else:
-
             with open("login.json") as json_data:
                 login["API_KEY"] = tmp_api_key
                 login["USER_KEY"] = tmp_user_key
                 login["USER_NAME"] = tmp_user_name
+                login["TOKEN"] = tmp_token
+                login["TIMESTAMP"] = datetime.datetime.now()
                 obj = open("login.json", "w")
                 obj.write(json.dumps(login))
                 obj.close()

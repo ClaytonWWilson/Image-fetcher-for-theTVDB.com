@@ -108,6 +108,7 @@ def tryMissing(missingNums, min, max, idNum, imageType):
 FAN_KEY_TYPE = "?keyType=fanart"# TODO check upper and lower bounds
 POS_KEY_TYPE = "?keyType=poster"
 BAN_KEY_TYPE = "?keyType=series"
+
 token = getToken(url, data, headers)# TODO uppercase these
 
 
