@@ -11,13 +11,18 @@ def user_choice():
 
 
 while True:
+    clear_screen()
+    print("=============================\n"
+          "Image fetcher for theTVDB.com\n"
+          "=============================\n")
+
     print("1. Search theTVDB.com")
     print("2. Clear download folders")
     print("3. Change login")
     print("4. Refresh API Token")
     print("5. Install Requirements")
-    print("6. Check for updates")
-    print("7. Exit")
+    print("6. Check for updates\n")
+    print("0. Exit\n")
 
     choice = user_choice()
 
@@ -39,5 +44,5 @@ while True:
     elif choice == "6":
         print("update")
         break
-    elif choice == "7":
-        print("Exit")
+    elif choice == "0":
+        exit()
