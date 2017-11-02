@@ -1,6 +1,6 @@
 import os                   # TODO: change the order of all import statements to 1. standard library
 from login import *         # TODO: 2. related 3rd party
-from actions import *       # TODO: 3. local application with blank lines between
+from actions import *       # TODO: 3. local application. with blank lines between and remove wilcard symbols
 
 def clear_screen():
     IS_WINDOWS = os.name == "nt"
