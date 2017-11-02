@@ -13,20 +13,24 @@ def clearLogin():
         pass
 
 def clearFolders():# TODO implement this
-    if os.path.exists("banner"):
-        print("cleared")
-    else:
-        print("empty")
+    folders = ["banner", "fanart", "poster"]
+    for folder in folders:
+        if os.path.exists(folder):
+            imageList = os.listdir(folder)
+            if len(imageList) != 0:
+                for x in imageList: # TODO check if folder is empty
+                    print("Deleting " + x)
+                    delPath = os.path.join(folder + "\\" + x)
+                    os.remove(delPath)
+                print(folder + " cleared\n")
+            else:
+                print(folder + " is already empty")
+        else:
+            createFolder(folder)
+    print("")
 
-    if os.path.exists("fanart"):
-        print("cleared")
-    else:
-        print("empty")
-
-    if os.path.exists("poster"):
-        print("cleared")
-    else:
-        print("empty")
+def createFolder(folder):
+    os.makedirs(folder)
 
 
 def getImages(idNum, keyType, authHeaders):

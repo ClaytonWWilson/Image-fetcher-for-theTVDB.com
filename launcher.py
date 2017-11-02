@@ -15,6 +15,7 @@ def user_choice():
 def wait():
     input("Press enter to continue.")
 
+
 while True:
     clear_screen()
     print("=============================\n"
@@ -35,6 +36,7 @@ while True:
         print("Search")
         break
     elif choice == "2":
+        clear_screen()
         clearFolders()
         wait()
     elif choice == "3":
