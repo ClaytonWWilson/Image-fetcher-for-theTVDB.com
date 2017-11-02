@@ -1,9 +1,33 @@
 import requests
 import shutil
 import json
+import os
 
 def refreshToken():
     print("Not implemented yet")
+
+def clearLogin():
+    try:
+        os.remove("login.json")
+    except Exception as e:
+        pass
+
+def clearFolders():# TODO implement this
+    if os.path.exists("banner"):
+        print("cleared")
+    else:
+        print("empty")
+
+    if os.path.exists("fanart"):
+        print("cleared")
+    else:
+        print("empty")
+
+    if os.path.exists("poster"):
+        print("cleared")
+    else:
+        print("empty")
+
 
 def getImages(idNum, keyType, authHeaders):
     imageUrl = "https://api.thetvdb.com/series/" + str(idNum) + "/images/query" + keyType

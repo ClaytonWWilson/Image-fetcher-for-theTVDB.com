@@ -20,16 +20,18 @@ def login():
         "TIMESTAMP": ""
         }
 
-        tmp_api_key = login["API_KEY"]
-        tmp_user_key = login["USER_KEY"]
-        tmp_user_name = login["USER_NAME"]
+        tmp_api_key = ""
+        tmp_user_key = ""
+        tmp_user_name = ""
+
+        print("You can find your user key & request an API key while logged in at:\nhttps://www.thetvdb.com/?tab=userinfo")
 
         while tmp_api_key is "":
-            tmp_api_key = input("Please enter your api key: ")
+            tmp_api_key = input("Enter your api key: ")
         while tmp_user_key is "":
-            tmp_user_key = input("Please enter your user key: ")
+            tmp_user_key = input("Enter your user key: ")
         while tmp_user_name is "":
-            tmp_user_name = input("Please enter your username: ")
+            tmp_user_name = input("Enter your username: ")
 
         LOGIN_DATA = {
             "apikey": tmp_api_key,
@@ -40,7 +42,7 @@ def login():
         tmp_token = getToken(LOGIN_DATA)
 
         if tmp_token is "":
-            print("Authentication failed. Please try again.")
+            print("\nAuthentication failed. Please try again.")
         else:
             login["API_KEY"] = tmp_api_key
             login["USER_KEY"] = tmp_user_key
@@ -51,12 +53,11 @@ def login():
             obj.write(json.dumps(login))
             obj.close()
     else:# if login.json already exists
-
-        with open("login.json") as json_data:
+        with open("login.json") as json_data:# TODO add a check for a login that is damaged/modified
             login = json.load(json_data)
             json_data.close()
         saveTime = dateutil.parser.parse(login["TIMESTAMP"])
-        curTime = datetime.datetime.now().replace(tzinfo=None)
+        curTime = datetime.datetime.now().replace(tzinfo=None)# TODO use UTC time?
 
         if checkTimestamp(saveTime, curTime):# token does not need refreshed
             print("token is good")

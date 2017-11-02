@@ -24,9 +24,10 @@ def getToken(data):#TODO add a timeout and try catch to all requests
 def checkStatus(response, v):
     if (response.status_code != 200):
         if (v == True):
-            print("An error occurred.")
+            print("\nAn error occurred.")
             print("HTTP Code: " + str(response.status_code))
-            print("Response : " + str(response.content))
+            error = json.loads(response.content)
+            print("Response : " + error["Error"])
         return False
     else:
         return True

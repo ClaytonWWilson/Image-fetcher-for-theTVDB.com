@@ -1,4 +1,7 @@
 import os
+from login import *
+from actions import *
+
 def clear_screen():
     IS_WINDOWS = os.name == "nt"
     if IS_WINDOWS:
@@ -9,6 +12,8 @@ def clear_screen():
 def user_choice():
     return input("> ").lower().strip()
 
+def wait():
+    input("Press enter to continue.")
 
 while True:
     clear_screen()
@@ -30,14 +35,16 @@ while True:
         print("Search")
         break
     elif choice == "2":
-        print("Clear download")
-        break
+        clearFolders()
+        wait()
     elif choice == "3":
-        print("Change login")
-        break
+        clear_screen()
+        clearLogin()
+        login()
+        wait()
     elif choice == "4":
-        print("Refresh token")
-        break
+        refreshToken()# TODO implement this
+        wait()
     elif choice == "5":
         print("install requirements")
         break
