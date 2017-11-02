@@ -32,8 +32,8 @@ def checkStatus(response, v):
     else:
         return True
 
-def checkTimestamp(saveTime, curTime):
-    if curTime - saveTime < datetime.timedelta(0, 86100, 0):# if less than 23h 55m since last token grab
+def checkTimestamp(saveTime, curTime):  # Returns true if the token is still valid
+    if curTime - saveTime < datetime.timedelta(0, 86100, 0):
         return True
     else:
         return False

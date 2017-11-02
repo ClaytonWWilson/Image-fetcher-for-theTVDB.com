@@ -1,10 +1,32 @@
 import requests
 import shutil
 import json
+import datetime
+import dateutil
 import os
+from checks import checkTimestamp
 
 def refreshToken():
     print("Not implemented yet")
+    if os.path.exists("login.json"):
+        try:
+            with open("login.json") as json_data:
+                login = json.load(json_data)
+                saveTime = dateutil.parser.parse(login["TIMESTAMP"])
+                curTime = datetime.datetime.now().replace(tzinfo=None)# TODO use UTC time?
+                json_data.close()
+                if checkTimestamp(saveTime, curTime):
+                    While True:
+                        print("The current token is still valid. Do you still want to grab a different one")
+                        choice = input("(y/n) ")
+                        if choice is "n":
+                            break
+                        elif choice is "y":
+                            token = getToken() # TODO finish setting this up. Make it occur if the if statement above fails
+        except Exception as e:
+            print("You need to log in first. Select Login/Change login.\n")  # TODO make a set of constants for error codes
+    else:
+        print("You need to log in first. Select Login/Change login.\n")
 
 def clearLogin():
     try:

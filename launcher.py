@@ -24,7 +24,7 @@ while True:
 
     print("1. Search theTVDB.com")
     print("2. Clear download folders")
-    print("3. Change login")
+    print("3. Login/Change login")
     print("4. Refresh API Token")
     print("5. Install Requirements")
     print("6. Check for updates\n")
