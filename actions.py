@@ -5,9 +5,16 @@ import datetime
 import dateutil
 import os
 from checks import checkTimestamp
+from checks import getToken
+
+def clear_screen():
+    IS_WINDOWS = os.name == "nt"
+    if IS_WINDOWS:
+        os.system("cls")
+    else:
+        os.system("clear")
 
 def refreshToken():
-    print("Not implemented yet")
     if os.path.exists("login.json"):
         try:
             with open("login.json") as json_data:
@@ -15,14 +22,35 @@ def refreshToken():
                 saveTime = dateutil.parser.parse(login["TIMESTAMP"])
                 curTime = datetime.datetime.now().replace(tzinfo=None)# TODO use UTC time?
                 json_data.close()
+
+                LOGIN_DATA = {
+                    "apikey": login["API_KEY"],
+                    "userkey": login["USER_KEY"],
+                    "username": login["USER_NAME"]
+                }
+
                 if checkTimestamp(saveTime, curTime):
-                    While True:
-                        print("The current token is still valid. Do you still want to grab a different one")
+                    while True:
+                        print("Your current token is still valid. Are you sure you want to grab a different one?")
                         choice = input("(y/n) ")
                         if choice is "n":
                             break
                         elif choice is "y":
-                            token = getToken() # TODO finish setting this up. Make it occur if the if statement above fails
+                            login["TOKEN"] = getToken(LOGIN_DATA)  # TODO find a better way to run this on both paths
+                            login["TIMESTAMP"] = str(datetime.datetime.now().replace(tzinfo=None))
+                            obj = open("login.json", "w")
+                            obj.write(json.dumps(login))
+                            obj.close()
+                            print("\nNew token acquired!\n")
+                            break
+                        clear_screen()
+                else:
+                    login["TOKEN"] = getToken(LOGIN_DATA)
+                    login["TIMESTAMP"] = str(datetime.datetime.now().replace(tzinfo=None))
+                    obj = open("login.json", "w")
+                    obj.write(json.dumps(login))
+                    obj.close()
+                    print("New token acquired!\n")
         except Exception as e:
             print("You need to log in first. Select Login/Change login.\n")  # TODO make a set of constants for error codes
     else:

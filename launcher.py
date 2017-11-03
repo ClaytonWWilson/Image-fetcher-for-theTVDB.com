@@ -2,13 +2,6 @@ import os                   # TODO: change the order of all import statements to
 from login import *         # TODO: 2. related 3rd party
 from actions import *       # TODO: 3. local application with blank lines between
 
-def clear_screen():
-    IS_WINDOWS = os.name == "nt"
-    if IS_WINDOWS:
-        os.system("cls")
-    else:
-        os.system("clear")
-
 def user_choice():
     return input("> ").lower().strip()
 
@@ -45,7 +38,8 @@ while True:
         login()
         wait()
     elif choice == "4":
-        refreshToken()# TODO implement this
+        clear_screen()
+        refreshToken()
         wait()
     elif choice == "5":
         print("install requirements")

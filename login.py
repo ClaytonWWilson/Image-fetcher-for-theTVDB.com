@@ -52,6 +52,7 @@ def login():
             obj = open("login.json", "w")
             obj.write(json.dumps(login))
             obj.close()
+            print("\nLogin successful!")
     else:# if login.json already exists
         with open("login.json") as json_data:# TODO add a check for a login that is damaged/modified
             login = json.load(json_data)
