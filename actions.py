@@ -143,14 +143,14 @@ def is_git_installed():
 
 def update():
     try:
-        code = subprocess.call(("git", "pull", "--ff-only"))
+        code = subprocess.call(("git", "pull", "--ff-only", "--quiet"))
     except FileNotFoundError:
         print("\nError: Git not found. It's either not installed or you did "
               "not clone this using git. Install instructions are on the GitHub: "
               "https://github.com/ClaytonWWilson/Image-fetcher-for-theTVDB.com")
         return
     if code == 0:
-        print("\nProgram has been updated.")
+        print("\nThe program has been updated.\n")
     else:
         print("\nThere was an error while updating. This may be caused by edits "
               "you have made to the code.")
