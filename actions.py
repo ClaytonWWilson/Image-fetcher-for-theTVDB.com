@@ -143,7 +143,7 @@ def is_git_installed():
 
 def update():
     try:
-        code = subprocess.call(("git", "pull", "--ff-only", "--quiet"))
+        code = subprocess.call(("git", "pull", "--ff-only"))
     except FileNotFoundError:
         print("\nError: Git not found. It's either not installed or you did "
               "not clone this using git. Install instructions are on the GitHub: "
