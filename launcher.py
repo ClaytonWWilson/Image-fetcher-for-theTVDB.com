@@ -45,7 +45,7 @@ while True:
         print("install requirements")
         break
     elif choice == "6":
-        print("update")
-        break
+        update()
+        wait()
     elif choice == "0":
         exit()

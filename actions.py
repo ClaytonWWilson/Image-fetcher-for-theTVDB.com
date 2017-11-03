@@ -4,6 +4,7 @@ import json
 import datetime
 import dateutil
 import os
+import subprocess
 from checks import checkTimestamp
 from checks import getToken
 
@@ -62,7 +63,7 @@ def clearLogin():
     except Exception as e:
         pass
 
-def clearFolders():# TODO implement this
+def clearFolders():  # TODO implement this
     folders = ["banner", "fanart", "poster"]
     for folder in folders:
         if os.path.exists(folder):
@@ -127,3 +128,29 @@ def download(imageType, parsed_respObj):
         else:
             quit()
     return saveNameList
+
+  # The following code is from Red-DiscordBot
+  # https://github.com/Cog-Creators/Red-DiscordBot
+def is_git_installed():
+    try:
+        subprocess.call(["git", "--version"], stdout=subprocess.DEVNULL,
+                                                stdin =subprocess.DEVNULL,
+                                                stderr=subprocess.DEVNULL)
+    except FileNotFoundError:
+        return False
+    else:
+        return True
+
+def update():
+    try:
+        code = subprocess.call(("git", "pull", "--ff-only"))
+    except FileNotFoundError:
+        print("\nError: Git not found. It's either not installed or you did "
+              "not clone this using git. Install instructions are on the GitHub: "
+              "https://github.com/ClaytonWWilson/Image-fetcher-for-theTVDB.com")
+        return
+    if code == 0:
+        print("\nProgram has been updated.")
+    else:
+        print("\nThere was an error while updating. This may be caused by edits "
+              "you have made to the code.")
