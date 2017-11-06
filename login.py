@@ -1,9 +1,12 @@
 import json
 import os.path
-from checks import *
-from actions import *
 import datetime
+
 import dateutil.parser
+
+from actions import refreshToken
+from checks import getToken
+
 
 def login():
     if os.path.exists("login.json") == False:
@@ -24,7 +27,7 @@ def login():
         tmp_user_key = ""
         tmp_user_name = ""
 
-        print("You can find your user key & request an API key while logged in at:\nhttps://www.thetvdb.com/?tab=userinfo")
+        print("You can find your user key & request an API key while logged in at:\nhttps://www.thetvdb.com/?tab=userinfo\n")
 
         while tmp_api_key is "":
             tmp_api_key = input("Enter your api key: ")

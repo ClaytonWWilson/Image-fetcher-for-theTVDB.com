@@ -1,7 +1,9 @@
-import os                   # TODO: change the order of all import statements to 1. standard library
-from login import login         # TODO: 2. related 3rd party
-from actions import wait       # TODO: 3. local application. with blank lines between and remove wilcard symbols
+import os
+
+from login import login
+from actions import wait
 from actions import clear_screen
+from actions import clearFolders
 from actions import clearLogin
 from actions import refreshToken
 from actions import update

@@ -1,7 +1,9 @@
-import requests
-import json
-import urllib.parse
 import os.path
+import json
+
+import requests
+import urllib.parse
+
 from actions import wait
 
 

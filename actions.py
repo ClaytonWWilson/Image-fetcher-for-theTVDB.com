@@ -1,10 +1,12 @@
-import requests
+import os
+import subprocess
 import shutil
 import json
 import datetime
+
+import requests
 import dateutil
-import os
-import subprocess
+
 from checks import checkTimestamp
 from checks import getToken
 
@@ -78,7 +80,7 @@ def clearFolders():  # TODO implement this
                     os.remove(delPath)
                 print(folder + " cleared\n")
             else:
-                print(folder + " is already empty")
+                print("'" + folder + "'" + " is already empty")
         else:
             createFolder(folder)
     print("")
@@ -96,10 +98,7 @@ def searchImages(idNum, keyType, authHeaders):  # This is getting a list of file
         quit()
 
 def downloadImages(imageType, respObj, idNum):  # TODO some images arent grabbed through the api. save the image number and make a try catch to get any missing images
-    if (os.path.exists(imageType)):  # TODO add try catch here
-        print("\nClearing /%s/" % imageType)
-        shutil.rmtree(imageType)
-    os.makedirs(imageType)
+    clearFolders()
 
     parsed_respObj = json.loads(respObj.content)
 
@@ -114,9 +113,8 @@ def download(imageType, parsed_respObj):
         fileName = parsed_respObj["data"][counter]["fileName"]  # TODO the download method should start here, move everything else up to downloadImages
         counter = counter + 1
 
-        slashIndex = fileName.rfind("/")
-        saveName = fileName[slashIndex + 1:]
-
+        slashIndex = fileName.rfind("/")  # This is used to slice the url at the beginning of the filename
+        saveName = fileName[slashIndex + 1:]  # For example 'https://thetvdb.com/banners/fanart/original/32451-3.jpg' --> '32451.jpg'
         saveNameList.append(saveName)
 
         print("Downloading... " + fileName)
