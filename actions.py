@@ -84,16 +84,16 @@ def createFolder(folder):
     os.makedirs(folder)
 
 
-def getImages(idNum, keyType, authHeaders):
-    imageUrl = "https://api.thetvdb.com/series/" + str(idNum) + "/images/query" + keyType
-    response = requests.get(imageUrl, headers=authHeaders)
+def searchImages(idNum, keyType, authHeaders):  # This is getting a list of file info for images in json format
+    queryUrl = "https://api.thetvdb.com/series/" + str(idNum) + "/images/query" + keyType
+    response = requests.get(queryUrl, headers=authHeaders)
     if (checkStatus(response, True)):
         return response
     else:
         quit()
 
-def downloadImages(imageType, respObj, idNum):# TODO some images arent grabbed through the api. save the image number and make a try catch to get any missing images
-    if (os.path.exists(imageType)):#TODO add try catch here
+def downloadImages(imageType, respObj, idNum):  # TODO some images arent grabbed through the api. save the image number and make a try catch to get any missing images
+    if (os.path.exists(imageType)):  # TODO add try catch here
         print("\nClearing /%s/" % imageType)
         shutil.rmtree(imageType)
     os.makedirs(imageType)
