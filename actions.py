@@ -8,6 +8,9 @@ import subprocess
 from checks import checkTimestamp
 from checks import getToken
 
+def wait():
+    input("Press enter to continue.")
+
 def clear_screen():
     IS_WINDOWS = os.name == "nt"
     if IS_WINDOWS:
@@ -21,7 +24,7 @@ def refreshToken():
             with open("login.json") as json_data:
                 login = json.load(json_data)
                 saveTime = dateutil.parser.parse(login["TIMESTAMP"])
-                curTime = datetime.datetime.now().replace(tzinfo=None)# TODO use UTC time?
+                curTime = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
                 json_data.close()
 
                 LOGIN_DATA = {
@@ -69,7 +72,7 @@ def clearFolders():  # TODO implement this
         if os.path.exists(folder):
             imageList = os.listdir(folder)
             if len(imageList) != 0:
-                for x in imageList: # TODO check if folder is empty
+                for x in imageList:  # TODO check if folder is empty
                     print("Deleting " + x)
                     delPath = os.path.join(folder + "\\" + x)
                     os.remove(delPath)
@@ -108,7 +111,7 @@ def download(imageType, parsed_respObj):
     counter = 0
     saveNameList = []
     for imageObj in parsed_respObj["data"]:
-        fileName = parsed_respObj["data"][counter]["fileName"]#TODO the download method should start here, move everything else up to downloadImages
+        fileName = parsed_respObj["data"][counter]["fileName"]  # TODO the download method should start here, move everything else up to downloadImages
         counter = counter + 1
 
         slashIndex = fileName.rfind("/")
@@ -118,7 +121,7 @@ def download(imageType, parsed_respObj):
 
         print("Downloading... " + fileName)
         dlUrl = "https://www.thetvdb.com/banners/" + fileName
-        response = requests.get(dlUrl)# TODO getting errors when checking 'new game'. Check to see if those images actually exist
+        response = requests.get(dlUrl)  # TODO getting errors when checking 'new game'. Check to see if those images actually exist
 
         if (checkStatus(response, True)):
             path = os.path.join(imageType + "\\", saveName)

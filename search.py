@@ -2,9 +2,9 @@ import requests
 import json
 import urllib.parse
 import os.path
-from launcher import wait
+from actions import wait
 
-# import login
+
 
 def searchRemainder(imageType, saveNameList, idNum):#Finds any images missing from the api call in getImages
     numbers = []
@@ -73,7 +73,7 @@ def search():
                 if checkTimestamp(saveTime, curTime) == False:
                     print("Your token has expired. Get a new one by choosing Refresh Token.")
                     return None
-                else:  # All login checks pass and search starts
+                else:  # All login checks pass and search starts  # TODO move everything below out of the try except
                     FAN_KEY_TYPE = "?keyType=fanart"  # These are used in the search strings
                     POS_KEY_TYPE = "?keyType=poster"
                     BAN_KEY_TYPE = "?keyType=series"
@@ -131,13 +131,11 @@ def search():
                     fanart = searchImages(idNum, FAN_KEY_TYPE, authHeaders)  # for banners, fanart, and posters
                     poster = searchImages(idNum, POS_KEY_TYPE, authHeaders)
                     banner = searchImages(idNum, BAN_KEY_TYPE, authHeaders)
+
+                    downloadImages("fanart", fanart, idNum)  # TODO find a better way to pass these variables. Constructor?
+                    downloadImages("poster", poster, idNum)
+                    downloadImages("banner", banner, idNum)
+                    return None
     except:
         print("There was an error checking your login. Try logging in again with 'Login/Change login'.")
-        break
-
-
-downloadImages("fanart", fanart, idNum)  # TODO find a better way to pass this variable
-
-downloadImages("poster", poster, idNum)
-
-downloadImages("banner", banner, idNum)
+        return None

@@ -6,10 +6,6 @@ from search import search
 def user_choice():
     return input("> ").lower().strip()
 
-def wait():
-    input("Press enter to continue.")
-
-
 while True:
     clear_screen()
     print("=============================\n"
