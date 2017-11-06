@@ -1,6 +1,10 @@
 import os                   # TODO: change the order of all import statements to 1. standard library
-from login import *         # TODO: 2. related 3rd party
-from actions import *       # TODO: 3. local application. with blank lines between and remove wilcard symbols
+from login import login         # TODO: 2. related 3rd party
+from actions import wait       # TODO: 3. local application. with blank lines between and remove wilcard symbols
+from actions import clear_screen
+from actions import clearLogin
+from actions import refreshToken
+from actions import update
 from search import search
 
 def user_choice():

@@ -64,5 +64,4 @@ def login():
             print("token is good")
         else:
             refreshToken()
-# TODO try to get token, if token fails, ask for login info again, if it passes save login details to login.py and save token with timestamp.
 # TODO at startup, check token for validity and remove it if it is expired
