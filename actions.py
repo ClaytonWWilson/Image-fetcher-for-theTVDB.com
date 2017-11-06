@@ -98,8 +98,6 @@ def searchImages(idNum, keyType, authHeaders):  # This is getting a list of file
         quit()
 
 def downloadImages(imageType, respObj, idNum):  # TODO some images arent grabbed through the api. save the image number and make a try catch to get any missing images
-    clearFolders()
-
     parsed_respObj = json.loads(respObj.content)
 
     saveNameList = download(imageType, parsed_respObj)

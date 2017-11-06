@@ -7,7 +7,7 @@ import urllib.parse
 from actions import wait
 
 
-
+# TODO Move this to actions
 def searchRemainder(imageType, saveNameList, idNum):#Finds any images missing from the api call in getImages
     numbers = []
     print("Checking for missing images...")  # TODO implement this method
@@ -135,6 +135,7 @@ def search():
     poster = searchImages(idNum, POS_KEY_TYPE, authHeaders)
     banner = searchImages(idNum, BAN_KEY_TYPE, authHeaders)
 
+    clearFolders()
     downloadImages("fanart", fanart, idNum)  # TODO find a better way to pass these variables. Constructor?
     downloadImages("poster", poster, idNum)
     downloadImages("banner", banner, idNum)
