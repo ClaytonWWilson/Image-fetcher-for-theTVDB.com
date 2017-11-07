@@ -1,62 +1,17 @@
 import os.path
 import json
+import datetime
 
 import requests
 import urllib.parse
+import dateutil
 
-from actions import wait
+from actions import clearFolders
+from actions import downloadImages
+from actions import searchImages
+from checks import checkTimestamp
+from checks import checkStatus
 
-
-# TODO Move this to actions
-def searchRemainder(imageType, saveNameList, idNum):#Finds any images missing from the api call in getImages
-    numbers = []
-    print("Checking for missing images...")  # TODO implement this method
-    if (imageType is "banner"):  # TODO check upper and lower bounds
-        print("this is a banner")
-        #TODO deal with banners
-    else:
-        for name in saveNameList:
-            if (name.rfind("-") != -1):
-                hyphenIndex = name.rfind("-")
-                hyphenSuffix = name[hyphenIndex + 1:]
-                value = hyphenSuffix.replace(".jpg", "")
-                numbers.append(int(value))
-            else:
-                print("I couldn't find a hyphen in: %s" % name)#Error checking
-        numbers.sort
-        missingList = findMissing(numbers)
-        minNum = min(numbers)
-        maxNum = max(numbers)
-        tryMissing(missingList, minNum, maxNum, idNum, imageType)
-
-def findMissing(numbers):  # TODO test this
-    start, end = numbers[0], numbers[-1]
-    return sorted(set(range(start, end + 1)).difference(numbers))
-
-def tryMissing(missingNums, min, max, idNum, imageType):
-    if (imageType is "fanart"):
-        startDirectory = "fanart/original/"
-    elif (imageType is "poster"):
-        startDirectory = "posters/"
-
-    for num in missingNums:
-        fileName = startDirectory + str(idNum) + "-" + str(num) + ".jpg"
-        # fileName = "%s%s-%d.jpg" % startDirectory, idNum, missingNums[num]
-        print("This is missing: " + fileName)
-        try:
-            print("Trying... " + fileName)
-            dlUrl = "https://www.thetvdb.com/banners/" + fileName
-            response = requests.get(dlUrl)
-            if (checkStatus(response, False) == True):
-                path = os.path.join(imageType + "\\" + str(idNum) + str(num) + ".jpg")
-                obj = open(path, "wb")
-                obj.write(response.content)
-                obj.close()
-
-        except Exception as e:
-            print("repsonse code: " + str(response.status_code))
-            print("Check: " + dlUrl)
-            print(fileName + " doesn't exist")
 
 def search():
     try:
@@ -72,7 +27,8 @@ def search():
                 if checkTimestamp(saveTime, curTime) == False:
                     print("Your token has expired. Get a new one by choosing Refresh Token.")
                     return None
-    except:
+    except Exception as ex:
+        print(ex)
         print("There was an error checking your login. Try logging in again with 'Login/Change login'.")
         return None
 
@@ -109,6 +65,7 @@ def search():
     title = -1
     print()
     while title < 0 or title > len(searchResults["data"]) - 1:  # Looping until the user chooses
+        print("==================================")
         print("Results:")                                       # a series from the printed list
         count = 1                                               # or they input '0' to cancel
         for result in searchResults["data"]:

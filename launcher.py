@@ -35,7 +35,7 @@ while True:
         clear_screen()
         clearFolders()
         wait()
-    elif choice == "3":
+    elif choice == "3":  # TODO if already logged in, ask 'are you sure?'
         clear_screen()
         clearLogin()
         login()
