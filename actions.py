@@ -75,11 +75,12 @@ def clearFolders():  # TODO implement this
         if os.path.exists(folder):
             imageList = os.listdir(folder)
             if len(imageList) != 0:
+                print("Clearing " + folder)
                 for x in imageList:  # TODO check if folder is empty
                     print("Deleting " + x)
                     delPath = os.path.join(folder + "\\" + x)
                     os.remove(delPath)
-                print(folder + " cleared\n")
+                print()
             else:
                 print("'" + folder + "'" + " is already empty")
         else:
@@ -116,10 +117,10 @@ def searchRemainder(imageType, saveNameList, idNum):#Finds any images missing fr
             if (name.rfind("-") != -1):
                 hyphenIndex = name.rfind("-")
                 hyphenSuffix = name[hyphenIndex + 1:]
-                value = hyphenSuffix.replace(".jpg", "")
-                numbers.append(int(value))
+                filenum = hyphenSuffix.replace(".jpg", "")
+                numbers.append(int(filenum))
             else:
-                print("I couldn't find a hyphen in: %s" % name)#Error checking
+                print("I couldn't find a hyphen in: %s" % name)  # Error checking
         numbers.sort
         missingList = findMissing(numbers)
         minNum = min(numbers)
@@ -139,16 +140,20 @@ def tryMissing(missingNums, min, max, idNum, imageType):
     for num in missingNums:
         fileName = startDirectory + str(idNum) + "-" + str(num) + ".jpg"
         # fileName = "%s%s-%d.jpg" % startDirectory, idNum, missingNums[num]
-        print("This is missing: " + fileName)
         try:
-            print("Trying... " + fileName)
+            print("\nTrying... " + fileName)
             dlUrl = "https://www.thetvdb.com/banners/" + fileName
+            print("url is: " + dlUrl)
             response = requests.get(dlUrl)
-            if (checkStatus(response, False) == True):
-                path = os.path.join(imageType + "\\" + str(idNum) + str(num) + ".jpg")
+            if (checkStatus(response, True) == True):  # TODO there is an error occurring here when checking fanart
+                path = os.path.join(imageType + "\\" + str(idNum) + "-" + str(num) + ".jpg")
                 obj = open(path, "wb")
                 obj.write(response.content)
                 obj.close()
+                print("Image found")
+            else:
+                print("Image not found")
+                print(response.status_code)
 
         except Exception as e:
             print("repsonse code: " + str(response.status_code))

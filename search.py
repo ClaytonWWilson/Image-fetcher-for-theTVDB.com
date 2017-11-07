@@ -7,6 +7,7 @@ import urllib.parse
 import dateutil
 
 from actions import clearFolders
+from actions import clear_screen
 from actions import downloadImages
 from actions import searchImages
 from checks import checkTimestamp
@@ -64,8 +65,8 @@ def search():
 
     title = -1
     print()
+    clear_screen()
     while title < 0 or title > len(searchResults["data"]) - 1:  # Looping until the user chooses
-        print("==================================")
         print("Results:")                                       # a series from the printed list
         count = 1                                               # or they input '0' to cancel
         for result in searchResults["data"]:
@@ -96,5 +97,5 @@ def search():
     downloadImages("fanart", fanart, idNum)  # TODO find a better way to pass these variables. Constructor?
     downloadImages("poster", poster, idNum)
     downloadImages("banner", banner, idNum)
-    print("All downloads finished!")
+    print("\nAll downloads finished!\n")
     return None
