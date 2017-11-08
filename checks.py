@@ -14,7 +14,7 @@ def getToken(data):#TODO add a timeout and try catch to all requests
         print("An error occurred. Please check your internet and try again.")
         quit()
 
-    if (checkStatus(response, True)):
+    if (checkStatus(response, False)):
         parsed_token = json.loads(response.content)
         token = parsed_token["token"]
         return token
@@ -26,8 +26,8 @@ def checkStatus(response, v):
         if (v == True):
             print("\nAn error occurred.")
             print("HTTP Code: " + str(response.status_code))
-            error = json.loads(response.content)
-            print("Response : " + error["Error"])
+            # error = json.loads(response.content)  # TODO move this somewhere else
+            # print("Response : " + error["Error"])
         return False
     else:
         return True

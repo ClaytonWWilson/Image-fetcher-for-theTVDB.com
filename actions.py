@@ -125,13 +125,14 @@ def searchRemainder(imageType, saveNameList, idNum):#Finds any images missing fr
         missingList = findMissing(numbers)
         minNum = min(numbers)
         maxNum = max(numbers)
+
         tryMissing(missingList, minNum, maxNum, idNum, imageType)
 
 def findMissing(numbers):  # TODO test this
     start, end = numbers[0], numbers[-1]
     return sorted(set(range(start, end + 1)).difference(numbers))
 
-def tryMissing(missingNums, min, max, idNum, imageType):
+def tryMissing(missingNums, minNum, maxNum, idNum, imageType):
     if (imageType is "fanart"):
         startDirectory = "fanart/original/"
     elif (imageType is "poster"):
@@ -140,25 +141,29 @@ def tryMissing(missingNums, min, max, idNum, imageType):
     for num in missingNums:
         fileName = startDirectory + str(idNum) + "-" + str(num) + ".jpg"
         # fileName = "%s%s-%d.jpg" % startDirectory, idNum, missingNums[num]
-        try:
-            print("\nTrying... " + fileName)
-            dlUrl = "https://www.thetvdb.com/banners/" + fileName
-            print("url is: " + dlUrl)
-            response = requests.get(dlUrl)
-            if (checkStatus(response, True) == True):  # TODO there is an error occurring here when checking fanart
-                path = os.path.join(imageType + "\\" + str(idNum) + "-" + str(num) + ".jpg")
-                obj = open(path, "wb")
-                obj.write(response.content)
-                obj.close()
-                print("Image found")
-            else:
-                print("Image not found")
-                print(response.status_code)
+        # try:
+        print("\nTrying... " + fileName)
+        dlUrl = "https://www.thetvdb.com/banners/" + fileName
+        # print("url is: " + dlUrl)
+        response = requests.get(dlUrl)
+        # print(response.status_code)
+        if (checkStatus(response, True) == True):  # TODO there is an error occurring here when checking fanart
+            path = os.path.join(imageType + "\\" + str(idNum) + "-" + str(num) + ".jpg")
+            obj = open(path, "wb")
+            obj.write(response.content)
+            obj.close()
+            print("Image found\n")
+        else:
+            print("Image not found\n")
+            # print(response.status_code)
 
-        except Exception as e:
-            print("repsonse code: " + str(response.status_code))
-            print("Check: " + dlUrl)
-            print(fileName + " doesn't exist")
+        # except Exception as e:
+        #     print("response code: " + str(response.status_code))
+        #     print("Check: " + dlUrl)
+        #     print(e)
+
+    while minNum > 1:  # Checking lower bounds
+
 
 def download(imageType, parsed_respObj):
     counter = 0
