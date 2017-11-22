@@ -75,7 +75,7 @@ def clearFolders():  # TODO implement this
         if os.path.exists(folder):
             imageList = os.listdir(folder)
             if len(imageList) != 0:
-                print("Clearing " + folder)
+                print("Clearing " + folder + "/")
                 for x in imageList:  # TODO check if folder is empty
                     print("Deleting " + x)
                     delPath = os.path.join(folder + "\\" + x)
@@ -142,7 +142,7 @@ def tryMissing(missingNums, minNum, maxNum, idNum, imageType):
         fileName = startDirectory + str(idNum) + "-" + str(num) + ".jpg"
         # fileName = "%s%s-%d.jpg" % startDirectory, idNum, missingNums[num]
         # try:
-        print("\nTrying... " + fileName)
+        print("Trying... " + fileName)
         dlUrl = "https://www.thetvdb.com/banners/" + fileName
         # print("url is: " + dlUrl)
         response = requests.get(dlUrl)
@@ -162,8 +162,8 @@ def tryMissing(missingNums, minNum, maxNum, idNum, imageType):
         #     print("Check: " + dlUrl)
         #     print(e)
 
-    while minNum > 1:  # Checking lower bounds
-
+    # while minNum > 1:  # Checking lower bounds
+    #     print("check lower")
 
 def download(imageType, parsed_respObj):
     counter = 0
