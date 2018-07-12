@@ -9,6 +9,8 @@ from actions import refreshToken
 from actions import update
 from search import search
 
+# TODO fix naming convention for all variables and functions
+
 def user_choice():
     return input("> ").lower().strip()
 
@@ -36,17 +38,17 @@ while True:
         clearFolders()
         wait()
     elif choice == "3":  # TODO if already logged in, ask 'are you sure?'
-        clear_screen()
+        clear_screen()   # TODO wait to clear login and add a ctrl+c option to cancel
         clearLogin()
         login()
         wait()
-    elif choice == "4":
+    elif choice == "4":  # TODO need to perform this option automatically
         clear_screen()
         refreshToken()
         wait()
     elif choice == "5":
-        print("install requirements")
-        break
+        print("install requirements not implemented yet")
+        wait()
     elif choice == "6":
         update()
         wait()

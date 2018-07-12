@@ -87,12 +87,12 @@ def clearFolders():  # TODO implement this
             createFolder(folder)
     print("")
 
-def createFolder(folder):
+def createFolder(folder):  # TODO remove this
     os.makedirs(folder)
 
 
 def searchImages(idNum, keyType, authHeaders):  # This is getting a list of file info for images in json format
-    queryUrl = "https://api.thetvdb.com/series/" + str(idNum) + "/images/query" + keyType
+    queryUrl = "https://api.thetvdb.com/series/" + str(idNum) + "/images/query" + keyType  # TODO change this to string formatting
     response = requests.get(queryUrl, headers=authHeaders)
     if (checkStatus(response, True)):
         return response
@@ -128,7 +128,7 @@ def searchRemainder(imageType, saveNameList, idNum):#Finds any images missing fr
 
         tryMissing(missingList, minNum, maxNum, idNum, imageType)
 
-def findMissing(numbers):  # TODO test this
+def findMissing(numbers):
     start, end = numbers[0], numbers[-1]
     return sorted(set(range(start, end + 1)).difference(numbers))
 
@@ -148,7 +148,7 @@ def tryMissing(missingNums, minNum, maxNum, idNum, imageType):
         response = requests.get(dlUrl)
         # print(response.status_code)
         if (checkStatus(response, True) == True):  # TODO there is an error occurring here when checking fanart
-            path = os.path.join(imageType + "\\" + str(idNum) + "-" + str(num) + ".jpg")
+            path = os.path.join(imageType + "\\" + str(idNum) + "-" + str(num) + ".jpg")  # TODO string formatting
             obj = open(path, "wb")
             obj.write(response.content)
             obj.close()

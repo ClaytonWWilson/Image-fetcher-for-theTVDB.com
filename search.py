@@ -9,6 +9,7 @@ import dateutil
 from actions import clearFolders
 from actions import clear_screen
 from actions import downloadImages
+from actions import refreshToken
 from actions import searchImages
 from checks import checkTimestamp
 from checks import checkStatus
@@ -26,8 +27,9 @@ def search():
                 saveTime = dateutil.parser.parse(login["TIMESTAMP"])
                 curTime = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
                 if checkTimestamp(saveTime, curTime) == False:
-                    print("Your token has expired. Get a new one by choosing Refresh Token.")
-                    return None
+                    # print("Your token has expired. Get a new one by choosing Refresh Token.")
+                    # return None
+                    refreshToken()
     except Exception as ex:
         print(ex)
         print("There was an error checking your login. Try logging in again with 'Login/Change login'.")
