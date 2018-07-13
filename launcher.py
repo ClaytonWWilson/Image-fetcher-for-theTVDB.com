@@ -4,7 +4,6 @@ from login import login
 from actions import wait
 from actions import clear_screen
 from actions import clearFolders
-from actions import clearLogin
 from actions import refreshToken
 from actions import update
 from search import search
@@ -39,7 +38,7 @@ while True:
         wait()
     elif choice == "3":  # TODO if already logged in, ask 'are you sure?'
         clear_screen()   # TODO wait to clear login and add a ctrl+c option to cancel
-        clearLogin()
+        # clearLogin()
         login()
         wait()
     # elif choice == "4":  # TODO need to perform this option automatically

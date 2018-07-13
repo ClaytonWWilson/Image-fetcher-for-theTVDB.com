@@ -27,8 +27,6 @@ def search():
                 saveTime = dateutil.parser.parse(login["TIMESTAMP"])
                 curTime = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
                 if checkTimestamp(saveTime, curTime) == False:
-                    # print("Your token has expired. Get a new one by choosing Refresh Token.")
-                    # return None
                     refreshToken()
     except Exception as ex:
         print(ex)

@@ -65,12 +65,6 @@ def refreshToken():
     else:
         print("You need to log in first. Select Login/Change login.\n")
 
-def clearLogin():
-    try:
-        os.remove("login.json")
-    except Exception as e:
-        pass
-
 def clearFolders():  # TODO implement this
     folders = ["banner", "fanart", "poster"]
     del_count = 0
