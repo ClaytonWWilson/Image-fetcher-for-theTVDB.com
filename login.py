@@ -27,14 +27,20 @@ def login():
     tmp_user_key = ""
     tmp_user_name = ""
 
-    print("You can find your user key & request an API key while logged in at:\nhttps://www.thetvdb.com/?tab=userinfo\n")
+    print("You can find your user key & request an API key while logged in at:\n"
+          "https://www.thetvdb.com/?tab=userinfo\n"
+          "Press CTRL+C to cancel.\n")
 
-    while tmp_api_key is "":
-        tmp_api_key = input("Enter your api key: ")
-    while tmp_user_key is "":
-        tmp_user_key = input("Enter your user key: ")
-    while tmp_user_name is "":
-        tmp_user_name = input("Enter your username: ")
+    try:
+        while tmp_api_key is "":
+            tmp_api_key = input("Enter your api key: ")
+        while tmp_user_key is "":
+            tmp_user_key = input("Enter your user key: ")
+        while tmp_user_name is "":
+            tmp_user_name = input("Enter your username: ")
+    except KeyboardInterrupt as e:
+        print("\n")
+        return
 
     LOGIN_DATA = {
         "apikey": tmp_api_key,

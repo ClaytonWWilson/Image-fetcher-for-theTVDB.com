@@ -37,14 +37,9 @@ while True:
         clearFolders()
         wait()
     elif choice == "3":  # TODO if already logged in, ask 'are you sure?'
-        clear_screen()   # TODO wait to clear login and add a ctrl+c option to cancel
-        # clearLogin()
+        clear_screen()
         login()
         wait()
-    # elif choice == "4":  # TODO need to perform this option automatically
-    #     clear_screen()
-    #     refreshToken()
-    #     wait()
     elif choice == "4":
         print("install requirements not implemented yet")
         wait()
