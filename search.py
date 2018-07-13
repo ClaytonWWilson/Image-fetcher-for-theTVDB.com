@@ -57,7 +57,7 @@ def search():
     sKeyword = sKeyword.replace("/", "%2F")
     sKeyword = sKeyword.replace("%7E", "~")
 
-    searchUrl = "https://api.thetvdb.com/search/series?name=" + sKeyword
+    searchUrl = "https://api.thetvdb.com/search/series?name={}".format(sKeyword)
     response = requests.get(searchUrl, headers=authHeaders)
 
     if (checkStatus(response, True) == False):
@@ -72,11 +72,11 @@ def search():
         print("Results:")                                       # a series from the printed list
         count = 1                                               # or they input '0' to cancel
         for result in searchResults["data"]:
-            print("\n%s)\nSeries Name: " % str(count), str(result["seriesName"]))
+            print("\n{})\nSeries Name: {}".format(str(count), str(result["seriesName"])))
             print()
             desc = result["overview"]
             desc = str(desc).replace("\r\n\r\n", " ")  # Removing format characters
-            print("Description: \n%s" % desc)
+            print("Description: \n{}".format(desc))
             print()
             count = count + 1
         print()

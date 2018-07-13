@@ -23,9 +23,9 @@ while True:
     print("1. Search theTVDB.com")
     print("2. Clear download folders")
     print("3. Login/Change login")
-    print("4. Refresh API Token")
-    print("5. Install Requirements")
-    print("6. Check for updates\n")
+    # print("4. Refresh API Token")
+    print("4. Install Requirements")
+    print("5. Check for updates\n")
     print("0. Exit\n")
 
     choice = user_choice()
@@ -42,14 +42,14 @@ while True:
         clearLogin()
         login()
         wait()
-    elif choice == "4":  # TODO need to perform this option automatically
-        clear_screen()
-        refreshToken()
-        wait()
-    elif choice == "5":
+    # elif choice == "4":  # TODO need to perform this option automatically
+    #     clear_screen()
+    #     refreshToken()
+    #     wait()
+    elif choice == "4":
         print("install requirements not implemented yet")
         wait()
-    elif choice == "6":
+    elif choice == "5":
         update()
         wait()
     elif choice == "0":

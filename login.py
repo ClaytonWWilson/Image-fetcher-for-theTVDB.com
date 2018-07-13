@@ -57,7 +57,7 @@ def login():
             obj.close()
             print("\nLogin successful!\n")
     else:# if login.json already exists
-        with open("login.json") as json_data:# TODO add a check for a login that is damaged/modified
+        with open("login.json") as json_data:# TODO add a check for a login file that is damaged/modified
             login = json.load(json_data)
             json_data.close()
         saveTime = dateutil.parser.parse(login["TIMESTAMP"])

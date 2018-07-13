@@ -11,6 +11,8 @@ from checks import checkTimestamp
 from checks import checkStatus
 from checks import getToken
 
+# TODO add counters for number of images downloaded and deleted
+
 def wait():
     input("Press enter to continue.")
 
@@ -71,28 +73,30 @@ def clearLogin():
 
 def clearFolders():  # TODO implement this
     folders = ["banner", "fanart", "poster"]
+    del_count = 0
     for folder in folders:
         if os.path.exists(folder):
             imageList = os.listdir(folder)
             if len(imageList) != 0:
                 print("Clearing " + folder + "/")
                 for x in imageList:  # TODO check if folder is empty
-                    print("Deleting " + x)
+                    print("Deleting {}/{}".format(folder, x))
                     delPath = os.path.join(folder + "\\" + x)
                     os.remove(delPath)
+                    del_count += 1
                 print()
             else:
-                print("'" + folder + "'" + " is already empty")
+                print("'{}' is already empty".format(folder))
         else:
             createFolder(folder)
-    print("")
+    print("Deleted {} images.\n".format(del_count))
 
 def createFolder(folder):  # TODO remove this
     os.makedirs(folder)
 
 
 def searchImages(idNum, keyType, authHeaders):  # This is getting a list of file info for images in json format
-    queryUrl = "https://api.thetvdb.com/series/" + str(idNum) + "/images/query" + keyType  # TODO change this to string formatting
+    queryUrl = "https://api.thetvdb.com/series/{}/images/query{}".format(str(idNum), keyType)
     response = requests.get(queryUrl, headers=authHeaders)
     if (checkStatus(response, True)):
         return response
@@ -120,7 +124,7 @@ def searchRemainder(imageType, saveNameList, idNum):#Finds any images missing fr
                 filenum = hyphenSuffix.replace(".jpg", "")
                 numbers.append(int(filenum))
             else:
-                print("I couldn't find a hyphen in: %s" % name)  # Error checking
+                print("I couldn't find a hyphen in: {}".format(name))  # Error checking
         numbers.sort
         missingList = findMissing(numbers)
         minNum = min(numbers)
@@ -139,16 +143,16 @@ def tryMissing(missingNums, minNum, maxNum, idNum, imageType):
         startDirectory = "posters/"
 
     for num in missingNums:
-        fileName = startDirectory + str(idNum) + "-" + str(num) + ".jpg"
+        fileName = "{}{}-{}.jpg".format(startDirectory, str(idNum), str(num))
         # fileName = "%s%s-%d.jpg" % startDirectory, idNum, missingNums[num]
         # try:
-        print("Trying... " + fileName)
-        dlUrl = "https://www.thetvdb.com/banners/" + fileName
+        print("Trying... {}".format(fileName))
+        dlUrl = "https://www.thetvdb.com/banners/{}".format(fileName)
         # print("url is: " + dlUrl)
         response = requests.get(dlUrl)
         # print(response.status_code)
         if (checkStatus(response, True) == True):  # TODO there is an error occurring here when checking fanart
-            path = os.path.join(imageType + "\\" + str(idNum) + "-" + str(num) + ".jpg")  # TODO string formatting
+            path = os.path.join("{}\\{}-{}.jpg".format(imageType, str(idNum), str(num)))
             obj = open(path, "wb")
             obj.write(response.content)
             obj.close()
@@ -176,8 +180,8 @@ def download(imageType, parsed_respObj):
         saveName = fileName[slashIndex + 1:]  # For example 'https://thetvdb.com/banners/fanart/original/32451-3.jpg' --> '32451.jpg'
         saveNameList.append(saveName)
 
-        print("Downloading... " + fileName)
-        dlUrl = "https://www.thetvdb.com/banners/" + fileName
+        print("Downloading... {}".format(fileName))
+        dlUrl = "https://www.thetvdb.com/banners/{}".format(fileName)
         response = requests.get(dlUrl)  # TODO getting errors when checking 'new game'. Check to see if those images actually exist
 
         if (checkStatus(response, True)):
@@ -210,7 +214,7 @@ def update():
               "https://github.com/ClaytonWWilson/Image-fetcher-for-theTVDB.com")
         return
     if code == 0:
-        print("\nThe program has been updated.\n")
+        print("\nUpdating complete.\n")
     else:
         print("\nThere was an error while updating. This may be caused by edits "
               "you have made to the code.")

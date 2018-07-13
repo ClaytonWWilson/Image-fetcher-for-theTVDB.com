@@ -25,7 +25,7 @@ def checkStatus(response, v):
     if (response.status_code != 200):
         if (v == True):
             print("\nAn error occurred.")
-            print("HTTP Code: " + str(response.status_code))
+            print("HTTP Code: {}".format(str(response.status_code)))
             # error = json.loads(response.content)  # TODO move this somewhere else
             # print("Response : " + error["Error"])
         return False
