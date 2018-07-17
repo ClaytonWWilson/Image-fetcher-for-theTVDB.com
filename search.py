@@ -2,9 +2,9 @@ import os.path
 import json
 import datetime
 
+import dateutil
 import requests
 import urllib.parse
-import dateutil
 
 from actions import clearFolders
 from actions import clear_screen

@@ -187,6 +187,25 @@ def download(imageType, parsed_respObj):
             quit()
     return saveNameList
 
+def installReqs():
+    if is_pip_installed == True:
+        # open Requirements.txt
+        # subprocess.call(["pip", "install", module], stdout=subprocess.DEVNULL,
+        #                                         stdin =subprocess.DEVNULL,
+        #                                         stderr=subprocess.DEVNULL)
+    else:
+        print("You need to install pip.")
+
+def is_pip_installed():
+    try:
+        subprocess.call(["pip", "--version"], stdout=subprocess.DEVNULL,
+                                                stdin =subprocess.DEVNULL,
+                                                stderr=subprocess.DEVNULL)
+    except FileNotFoundError:
+        return False
+    else:
+        return True
+
   # The following code is from Red-DiscordBot
   # https://github.com/Cog-Creators/Red-DiscordBot
 def is_git_installed():

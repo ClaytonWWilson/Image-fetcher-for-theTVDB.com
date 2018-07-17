@@ -4,14 +4,12 @@ from login import login
 from actions import wait
 from actions import clear_screen
 from actions import clearFolders
+from actions import installReqs
 from actions import refreshToken
 from actions import update
 from search import search
 
 # TODO fix naming convention for all variables and functions
-
-def user_choice():
-    return input("> ").lower().strip()
 
 while True:
     clear_screen()
@@ -22,12 +20,11 @@ while True:
     print("1. Search theTVDB.com")
     print("2. Clear download folders")
     print("3. Login/Change login")
-    # print("4. Refresh API Token")
     print("4. Install Requirements")
     print("5. Check for updates\n")
     print("0. Exit\n")
 
-    choice = user_choice()
+    choice = input("> ").lower().strip()
 
     if choice == "1":
         search()
@@ -36,12 +33,12 @@ while True:
         clear_screen()
         clearFolders()
         wait()
-    elif choice == "3":  # TODO if already logged in, ask 'are you sure?'
+    elif choice == "3":  # TODO add a printout that tells the user who is currently logged in
         clear_screen()
         login()
         wait()
     elif choice == "4":
-        print("install requirements not implemented yet")
+        installReqs()
         wait()
     elif choice == "5":
         update()
