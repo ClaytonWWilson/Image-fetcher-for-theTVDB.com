@@ -7,7 +7,7 @@ import requests
 import urllib.parse
 
 from actions import clearFolders
-from actions import clear_screen
+from actions import clearScreen
 from actions import downloadImages
 from actions import refreshToken
 from actions import searchImages
@@ -65,7 +65,7 @@ def search():
 
     title = -1
     print()
-    clear_screen()
+    clearScreen()
     while title < 0 or title > len(searchResults["data"]) - 1:  # Looping until the user chooses
         print("Results:")                                       # a series from the printed list
         count = 1                                               # or they input '0' to cancel

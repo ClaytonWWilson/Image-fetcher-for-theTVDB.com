@@ -2,7 +2,7 @@ import os
 
 from login import login
 from actions import wait
-from actions import clear_screen
+from actions import clearScreen
 from actions import clearFolders
 from actions import installReqs
 from actions import refreshToken
@@ -12,7 +12,7 @@ from search import search
 # TODO fix naming convention for all variables and functions
 
 while True:
-    clear_screen()
+    clearScreen()
     print("=============================\n"
           "Image fetcher for theTVDB.com\n"
           "=============================\n")
@@ -30,11 +30,11 @@ while True:
         search()
         wait()
     elif choice == "2":
-        clear_screen()
+        clearScreen()
         clearFolders()
         wait()
     elif choice == "3":  # TODO add a printout that tells the user who is currently logged in
-        clear_screen()
+        clearScreen()
         login()
         wait()
     elif choice == "4":

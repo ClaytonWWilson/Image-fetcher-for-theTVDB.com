@@ -16,7 +16,7 @@ from checks import getToken
 def wait():
     input("Press enter to continue.")
 
-def clear_screen():
+def clearScreen():
     IS_WINDOWS = os.name == "nt"
     if IS_WINDOWS:
         os.system("cls")
@@ -52,7 +52,7 @@ def refreshToken():
                             obj.close()
                             print("\nNew token acquired!\n")
                             break
-                        clear_screen()
+                        clearScreen()
                 else:
                     login["TOKEN"] = getToken(LOGIN_DATA)
                     login["TIMESTAMP"] = str(datetime.datetime.now().replace(tzinfo=None))
