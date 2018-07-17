@@ -26,7 +26,7 @@ while True:
 
     choice = input("> ").lower().strip()
 
-    if choice == "1":
+    if choice == "1":  # TODO catch KeyboardInterrupt at search
         search()
         wait()
     elif choice == "2":

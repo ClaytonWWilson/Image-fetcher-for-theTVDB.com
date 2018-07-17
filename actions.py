@@ -28,8 +28,8 @@ def refreshToken():
         try:
             with open("login.json") as json_data:
                 login = json.load(json_data)
-                saveTime = dateutil.parser.parse(login["TIMESTAMP"])
-                curTime = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
+                save_time = dateutil.parser.parse(login["TIMESTAMP"])
+                cur_time = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
                 json_data.close()
 
                 LOGIN_DATA = {
@@ -38,7 +38,7 @@ def refreshToken():
                     "username": login["USER_NAME"]
                 }
 
-                if checkTimestamp(saveTime, curTime):
+                if checkTimestamp(save_time, cur_time):
                     while True:
                         print("Your current token is still valid. Are you sure you want to grab a different one?")
                         choice = input("(y/n) ")
@@ -70,13 +70,13 @@ def clearFolders():  # TODO implement this
     del_count = 0
     for folder in folders:
         if os.path.exists(folder):
-            imageList = os.listdir(folder)
-            if len(imageList) != 0:
+            image_list = os.listdir(folder)
+            if len(image_list) != 0:
                 print("Clearing " + folder + "/")
-                for x in imageList:  # TODO check if folder is empty
+                for x in image_list:  # TODO check if folder is empty
                     print("Deleting {}/{}".format(folder, x))
-                    delPath = os.path.join(folder + "\\" + x)
-                    os.remove(delPath)
+                    del_path = os.path.join(folder + "\\" + x)
+                    os.remove(del_path)
                     del_count += 1
                 print()
             else:
@@ -89,64 +89,64 @@ def createFolder(folder):  # TODO remove this
     os.makedirs(folder)
 
 
-def searchImages(idNum, keyType, authHeaders):  # This is getting a list of file info for images in json format
-    queryUrl = "https://api.thetvdb.com/series/{}/images/query{}".format(str(idNum), keyType)
-    response = requests.get(queryUrl, headers=authHeaders)
+def searchImages(id_num, keyType, authHeaders):  # This is getting a list of file info for images in json format
+    query_url = "https://api.thetvdb.com/series/{}/images/query{}".format(str(id_num), keyType)
+    response = requests.get(query_url, headers=authHeaders)
     if (checkStatus(response, True)):
         return response
     else:
         quit()
 
-def downloadImages(imageType, respObj, idNum):  # TODO some images arent grabbed through the api. save the image number and make a try catch to get any missing images
-    parsed_respObj = json.loads(respObj.content)
+def downloadImages(image_type, respObj, id_num):  # TODO some images arent grabbed through the api. save the image number and make a try catch to get any missing images
+    parse_resp_obj = json.loads(respObj.content)
 
-    saveNameList = download(imageType, parsed_respObj)
+    save_name_list = download(image_type, parse_resp_obj)
 
-    searchRemainder(imageType, saveNameList, idNum)
+    searchRemainder(image_type, save_name_list, id_num)
 
-def searchRemainder(imageType, saveNameList, idNum):#Finds any images missing from the api call in getImages
+def searchRemainder(image_type, save_name_list, id_num):#Finds any images missing from the api call in getImages
     numbers = []
     print("Checking for missing images...")  # TODO implement this method
-    if (imageType is "banner"):  # TODO check upper and lower bounds
+    if (image_type is "banner"):  # TODO check upper and lower bounds
         print("this is a banner")
         #TODO deal with banners
     else:
-        for name in saveNameList:
+        for name in save_name_list:
             if (name.rfind("-") != -1):
-                hyphenIndex = name.rfind("-")
-                hyphenSuffix = name[hyphenIndex + 1:]
-                filenum = hyphenSuffix.replace(".jpg", "")
-                numbers.append(int(filenum))
+                hyphen_index = name.rfind("-")
+                hyphen_suffix = name[hyphen_index + 1:]
+                file_num = hyphen_suffix.replace(".jpg", "")
+                numbers.append(int(file_num))
             else:
                 print("I couldn't find a hyphen in: {}".format(name))  # Error checking
         numbers.sort
-        missingList = findMissing(numbers)
-        minNum = min(numbers)
-        maxNum = max(numbers)
+        missing_list = findMissing(numbers)
+        min_num = min(numbers)
+        max_num = max(numbers)
 
-        tryMissing(missingList, minNum, maxNum, idNum, imageType)
+        tryMissing(missing_list, min_num, max_num, id_num, image_type)
 
 def findMissing(numbers):
     start, end = numbers[0], numbers[-1]
     return sorted(set(range(start, end + 1)).difference(numbers))
 
-def tryMissing(missingNums, minNum, maxNum, idNum, imageType):
-    if (imageType is "fanart"):
-        startDirectory = "fanart/original/"
-    elif (imageType is "poster"):
-        startDirectory = "posters/"
+def tryMissing(missing_nums, min_num, max_num, id_num, image_type):
+    if (image_type is "fanart"):
+        start_directory = "fanart/original/"
+    elif (image_type is "poster"):
+        start_directory = "posters/"
 
-    for num in missingNums:
-        fileName = "{}{}-{}.jpg".format(startDirectory, str(idNum), str(num))
-        # fileName = "%s%s-%d.jpg" % startDirectory, idNum, missingNums[num]
+    for num in missing_nums:
+        filename = "{}{}-{}.jpg".format(start_directory, str(id_num), str(num))
+        # filename = "%s%s-%d.jpg" % start_directory, id_num, missing_nums[num]
         # try:
-        print("Trying... {}".format(fileName))
-        dlUrl = "https://www.thetvdb.com/banners/{}".format(fileName)
-        # print("url is: " + dlUrl)
-        response = requests.get(dlUrl)
+        print("Trying... {}".format(filename))
+        dl_url = "https://www.thetvdb.com/banners/{}".format(filename)
+        # print("url is: " + dl_url)
+        response = requests.get(dl_url)
         # print(response.status_code)
         if (checkStatus(response, True) == True):  # TODO there is an error occurring here when checking fanart
-            path = os.path.join("{}\\{}-{}.jpg".format(imageType, str(idNum), str(num)))
+            path = os.path.join("{}\\{}-{}.jpg".format(image_type, str(id_num), str(num)))
             obj = open(path, "wb")
             obj.write(response.content)
             obj.close()
@@ -157,35 +157,35 @@ def tryMissing(missingNums, minNum, maxNum, idNum, imageType):
 
         # except Exception as e:
         #     print("response code: " + str(response.status_code))
-        #     print("Check: " + dlUrl)
+        #     print("Check: " + dl_url)
         #     print(e)
 
-    # while minNum > 1:  # Checking lower bounds
+    # while min_num > 1:  # Checking lower bounds
     #     print("check lower")
 
-def download(imageType, parsed_respObj):
+def download(image_type, parse_resp_obj):
     counter = 0
-    saveNameList = []
-    for imageObj in parsed_respObj["data"]:
-        fileName = parsed_respObj["data"][counter]["fileName"]  # TODO the download method should start here, move everything else up to downloadImages
+    save_name_list = []
+    for image_obj in parse_resp_obj["data"]:
+        filename = parse_resp_obj["data"][counter]["filename"]  # TODO the download method should start here, move everything else up to downloadImages
         counter = counter + 1
 
-        slashIndex = fileName.rfind("/")  # This is used to slice the url at the beginning of the filename
-        saveName = fileName[slashIndex + 1:]  # For example 'https://thetvdb.com/banners/fanart/original/32451-3.jpg' --> '32451.jpg'
-        saveNameList.append(saveName)
+        slash_index = filename.rfind("/")  # This is used to slice the url at the beginning of the filename
+        save_name = filename[slash_index + 1:]  # For example 'https://thetvdb.com/banners/fanart/original/32451-3.jpg' --> '32451.jpg'
+        save_name_list.append(save_name)
 
-        print("Downloading... {}".format(fileName))
-        dlUrl = "https://www.thetvdb.com/banners/{}".format(fileName)
-        response = requests.get(dlUrl)  # TODO getting errors when checking 'new game'. Check to see if those images actually exist
+        print("Downloading... {}".format(filename))
+        dl_url = "https://www.thetvdb.com/banners/{}".format(filename)
+        response = requests.get(dl_url)  # TODO getting errors when checking 'new game'. Check to see if those images actually exist
 
         if (checkStatus(response, True)):
-            path = os.path.join(imageType + "\\", saveName)
+            path = os.path.join(image_type + "\\", save_name)
             obj = open(path, "wb")
             obj.write(response.content)
             obj.close()
         else:
             quit()
-    return saveNameList
+    return save_name_list
 
 def installReqs():
     if is_pip_installed() == True:

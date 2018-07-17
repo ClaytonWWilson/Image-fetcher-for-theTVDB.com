@@ -24,9 +24,9 @@ def search():
                 print("There was an error checking your login. Try logging in again with 'Login/Change login'.")
                 return None
             else:
-                saveTime = dateutil.parser.parse(login["TIMESTAMP"])
-                curTime = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
-                if checkTimestamp(saveTime, curTime) == False:
+                save_time = dateutil.parser.parse(login["TIMESTAMP"])
+                cur_time = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
+                if checkTimestamp(save_time, cur_time) == False:
                     refreshToken()
     except Exception as ex:
         print(ex)
@@ -45,31 +45,31 @@ def search():
     }
 
     keyword = input("Enter series to search: ")  # Getting the search name and fixing
-    sKeyword = urllib.parse.quote(keyword)       # the url parse mistakes
+    s_keyword = urllib.parse.quote(keyword)       # the url parse mistakes
 
-    sKeyword = sKeyword.replace("%21", "!")      # TODO find a better way of doing this
-    sKeyword = sKeyword.replace("%2A", "*")
-    sKeyword = sKeyword.replace("%28", "(")
-    sKeyword = sKeyword.replace("%29", ")")
-    sKeyword = sKeyword.replace("%27", "'")
-    sKeyword = sKeyword.replace("/", "%2F")
-    sKeyword = sKeyword.replace("%7E", "~")
+    s_keyword = s_keyword.replace("%21", "!")      # TODO find a better way of doing this
+    s_keyword = s_keyword.replace("%2A", "*")
+    s_keyword = s_keyword.replace("%28", "(")
+    s_keyword = s_keyword.replace("%29", ")")
+    s_keyword = s_keyword.replace("%27", "'")
+    s_keyword = s_keyword.replace("/", "%2F")
+    s_keyword = s_keyword.replace("%7E", "~")
 
-    searchUrl = "https://api.thetvdb.com/search/series?name={}".format(sKeyword)
-    response = requests.get(searchUrl, headers=authHeaders)
+    search_url = "https://api.thetvdb.com/search/series?name={}".format(s_keyword)
+    response = requests.get(search_url, headers=authHeaders)
 
     if (checkStatus(response, True) == False):
         return None
 
-    searchResults = json.loads(response.content)
+    search_results = json.loads(response.content)
 
     title = -1
     print()
     clearScreen()
-    while title < 0 or title > len(searchResults["data"]) - 1:  # Looping until the user chooses
+    while title < 0 or title > len(search_results["data"]) - 1:  # Looping until the user chooses
         print("Results:")                                       # a series from the printed list
         count = 1                                               # or they input '0' to cancel
-        for result in searchResults["data"]:
+        for result in search_results["data"]:
             print("\n{})\nSeries Name: {}".format(str(count), str(result["seriesName"])))
             print()
             desc = result["overview"]
@@ -80,7 +80,7 @@ def search():
         print()
         title = int(input("Choose one by number or '0' to exit: ")) - 1  # Subtracting 1 so that the
         print()                                                          # index can start from 0
-        if title < -1 or title > len(searchResults["data"]) - 1:
+        if title < -1 or title > len(search_results["data"]) - 1:
             print("Error: Choose the number of an item listed. Or '0' to exit.")
 
         if (title == -1):  # If the user inputs 0
@@ -88,14 +88,14 @@ def search():
 
         print()
 
-    idNum = searchResults["data"][title]["id"]               # Setting up the request urls
-    fanart = searchImages(idNum, FAN_KEY_TYPE, authHeaders)  # for banners, fanart, and posters
-    poster = searchImages(idNum, POS_KEY_TYPE, authHeaders)
-    banner = searchImages(idNum, BAN_KEY_TYPE, authHeaders)
+    id_num = search_results["data"][title]["id"]               # Setting up the request urls
+    fanart = searchImages(id_num, FAN_KEY_TYPE, authHeaders)  # for banners, fanart, and posters
+    poster = searchImages(id_num, POS_KEY_TYPE, authHeaders)
+    banner = searchImages(id_num, BAN_KEY_TYPE, authHeaders)
 
     clearFolders()
-    downloadImages("fanart", fanart, idNum)  # TODO find a better way to pass these variables. Constructor?
-    downloadImages("poster", poster, idNum)
-    downloadImages("banner", banner, idNum)
+    downloadImages("fanart", fanart, id_num)  # TODO find a better way to pass these variables. Constructor?
+    downloadImages("poster", poster, id_num)
+    downloadImages("banner", banner, id_num)
     print("\nAll downloads finished!\n")
     return None
