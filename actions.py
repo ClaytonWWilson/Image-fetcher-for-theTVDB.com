@@ -188,11 +188,17 @@ def download(imageType, parsed_respObj):
     return saveNameList
 
 def installReqs():
-    if is_pip_installed == True:
-        # open Requirements.txt
-        # subprocess.call(["pip", "install", module], stdout=subprocess.DEVNULL,
-        #                                         stdin =subprocess.DEVNULL,
-        #                                         stderr=subprocess.DEVNULL)
+    if is_pip_installed() == True:
+        with open("requirements.txt") as f:
+            reqs = f.readlines()
+            reqs = [x.strip() for x in reqs]
+
+        for module in reqs:
+            print("Installing {}... ".format(module))
+            subprocess.call(["pip", "install", module], stdout=subprocess.DEVNULL,
+                                                stdin =subprocess.DEVNULL,
+                                                stderr=subprocess.DEVNULL)
+        print("Done!\n")
     else:
         print("You need to install pip.")
 
