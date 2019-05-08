@@ -65,6 +65,27 @@ def refreshToken():
     else:
         print("You need to log in first. Select Login/Change login.\n")
 
+def download(series):
+    # Create downloads folder
+    if not os.path.exists("downloads"):
+        os.makedirs("downloads")
+    
+    # Remove previously downloaded content for this series if it exists
+    if os.path.exists(os.path.join("downloads", series.folder_name)):
+        shutil.rmtree(os.path.join("downloads", series.folder_name))
+
+    # Create series folder
+    os.makedirs(os.path.join("downloads", series.folder_name))
+
+    api_path = "https://api.thetvdb.com/series/" + series.id
+
+    api_con = APIConnector()
+    res = api_con.send_http_req(api_path)
+
+    with open("out.json", "w") as out:
+        out.write(json.dumps(json.loads(res.content)))
+
+
 def clearFolders():  # TODO implement this
     folders = ["banner", "fanart", "poster"]
     del_count = 0
@@ -163,29 +184,29 @@ def tryMissing(missing_nums, min_num, max_num, id_num, image_type):
     # while min_num > 1:  # Checking lower bounds
     #     print("check lower")
 
-def download(image_type, parse_resp_obj):
-    counter = 0
-    save_name_list = []
-    for image_obj in parse_resp_obj["data"]:
-        filename = parse_resp_obj["data"][counter]["filename"]  # TODO the download method should start here, move everything else up to downloadImages
-        counter = counter + 1
+# def download(image_type, parse_resp_obj):
+#     counter = 0
+#     save_name_list = []
+#     for image_obj in parse_resp_obj["data"]:
+#         filename = parse_resp_obj["data"][counter]["filename"]  # TODO the download method should start here, move everything else up to downloadImages
+#         counter = counter + 1
 
-        slash_index = filename.rfind("/")  # This is used to slice the url at the beginning of the filename
-        save_name = filename[slash_index + 1:]  # For example 'https://thetvdb.com/banners/fanart/original/32451-3.jpg' --> '32451.jpg'
-        save_name_list.append(save_name)
+#         slash_index = filename.rfind("/")  # This is used to slice the url at the beginning of the filename
+#         save_name = filename[slash_index + 1:]  # For example 'https://thetvdb.com/banners/fanart/original/32451-3.jpg' --> '32451.jpg'
+#         save_name_list.append(save_name)
 
-        print("Downloading... {}".format(filename))
-        dl_url = "https://www.thetvdb.com/banners/{}".format(filename)
-        response = requests.get(dl_url)  # TODO getting errors when checking 'new game'. Check to see if those images actually exist
+#         print("Downloading... {}".format(filename))
+#         dl_url = "https://www.thetvdb.com/banners/{}".format(filename)
+#         response = requests.get(dl_url)  # TODO getting errors when checking 'new game'. Check to see if those images actually exist
 
-        if (checkStatus(response, True)):
-            path = os.path.join(image_type + "\\", save_name)
-            obj = open(path, "wb")
-            obj.write(response.content)
-            obj.close()
-        else:
-            quit()
-    return save_name_list
+#         if (checkStatus(response, True)):
+#             path = os.path.join(image_type + "\\", save_name)
+#             obj = open(path, "wb")
+#             obj.write(response.content)
+#             obj.close()
+#         else:
+#             quit()
+#     return save_name_list
 
 def installReqs():
     if is_pip_installed() == True:
@@ -230,7 +251,7 @@ def update():
     except FileNotFoundError:
         print("\nError: Git not found. It's either not installed or you did "
               "not clone this using git. Install instructions are on the GitHub: "
-              "https://github.com/ClaytonWWilson/Image-fetcher-for-theTVDB.com")
+              "https://github.com/ClaytonWWilson/Scraper-for-theTVDB.com")
         return
     if code == 0:
         print("\nUpdating complete.\n")

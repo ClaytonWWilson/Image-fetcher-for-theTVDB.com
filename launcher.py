@@ -4,6 +4,7 @@ from login import login
 from actions import wait
 from actions import clearScreen
 from actions import clearFolders
+from actions import download
 from actions import installReqs
 from actions import refreshToken
 from actions import update
@@ -27,7 +28,9 @@ while True:
     choice = input("> ").lower().strip()
 
     if choice == "1":  # TODO catch KeyboardInterrupt at search
-        search()
+        series = search()
+        if series != None:
+            download(series)
         wait()
     elif choice == "2":
         clearScreen()

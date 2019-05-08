@@ -3,6 +3,7 @@ import json
 import datetime
 
 import dateutil
+import re
 import requests
 import urllib.parse
 
@@ -14,6 +15,18 @@ from actions import searchImages
 from checks import checkTimestamp
 from checks import checkStatus
 
+class Series:
+    def __init__(self, folder_name, id, url):
+        self.folder_name = folder_name
+        self.id = str(id)
+        self.url = url
+
+# Clears out all illegal filename characters from the string
+def create_folder_name(string):
+    string = string.strip().replace(' ', '_')
+    string = re.sub(r'(?u)[^-\w.]', '', string)
+    return string
+    
 
 def search():
     try:
@@ -29,7 +42,7 @@ def search():
                 if checkTimestamp(save_time, cur_time) == False:
                     refreshToken()
     except Exception as ex:
-        print(ex)
+        # print(ex)
         print("There was an error checking your login. Try logging in again with 'Login/Change login'.")
         return None
 
@@ -44,10 +57,10 @@ def search():
         "Authorization": "Bearer " + login["TOKEN"]
     }
 
-    keyword = input("Enter series to search: ")  # Getting the search name and fixing
-    s_keyword = urllib.parse.quote(keyword)       # the url parse mistakes
+    keyword = input("Enter series name to search: ")  # Getting the search name and fixing
+    s_keyword = urllib.parse.quote(keyword)      # the url parse mistakes
 
-    s_keyword = s_keyword.replace("%21", "!")      # TODO find a better way of doing this
+    s_keyword = s_keyword.replace("%21", "!")    # TODO find a better way of doing this
     s_keyword = s_keyword.replace("%2A", "*")
     s_keyword = s_keyword.replace("%28", "(")
     s_keyword = s_keyword.replace("%29", ")")
@@ -67,8 +80,8 @@ def search():
     print()
     clearScreen()
     while title < 0 or title > len(search_results["data"]) - 1:  # Looping until the user chooses
-        print("Results:")                                       # a series from the printed list
-        count = 1                                               # or they input '0' to cancel
+        print("Results:")                                        # a series from the printed list
+        count = 1                                                # or they input '0' to cancel
         for result in search_results["data"]:
             print("\n{})\nSeries Name: {}".format(str(count), str(result["seriesName"])))
             print()
@@ -78,6 +91,8 @@ def search():
             print()
             count = count + 1
         print()
+        #TODO this can crash with non integer inputs
+        #TODO they should also be able to ctrl-c to cancel search
         title = int(input("Choose one by number or '0' to exit: ")) - 1  # Subtracting 1 so that the
         print()                                                          # index can start from 0
         if title < -1 or title > len(search_results["data"]) - 1:
@@ -88,14 +103,17 @@ def search():
 
         print()
 
-    id_num = search_results["data"][title]["id"]               # Setting up the request urls
-    fanart = searchImages(id_num, FAN_KEY_TYPE, authHeaders)  # for banners, fanart, and posters
-    poster = searchImages(id_num, POS_KEY_TYPE, authHeaders)
-    banner = searchImages(id_num, BAN_KEY_TYPE, authHeaders)
+    series = Series(create_folder_name(search_results["data"][title]["seriesName"]), search_results["data"][title]["id"], "https://www.thetvdb.com/series/" + search_results["data"][title]["slug"])
+    return series
 
-    clearFolders()
-    downloadImages("fanart", fanart, id_num)  # TODO find a better way to pass these variables. Constructor?
-    downloadImages("poster", poster, id_num)
-    downloadImages("banner", banner, id_num)
-    print("\nAll downloads finished!\n")
-    return None
+    # id_num = search_results["data"][title]["id"]               # Setting up the request urls
+    # fanart = searchImages(id_num, FAN_KEY_TYPE, authHeaders)   # for banners, fanart, and posters
+    # poster = searchImages(id_num, POS_KEY_TYPE, authHeaders)
+    # banner = searchImages(id_num, BAN_KEY_TYPE, authHeaders)
+
+    # clearFolders()
+    # downloadImages("fanart", fanart, id_num)  # TODO find a better way to pass these variables. Constructor?
+    # downloadImages("poster", poster, id_num)
+    # downloadImages("banner", banner, id_num)
+    # print("\nAll downloads finished!\n")
+    # return None

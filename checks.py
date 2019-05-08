@@ -33,7 +33,8 @@ def checkStatus(response, v):
     else:
         return True
 
-def checkTimestamp(save_time, cur_time):  # Returns true if the token is still valid
+# Returns true if the token is still valid
+def checkTimestamp(save_time, cur_time):
     if cur_time - save_time < datetime.timedelta(0, 86100, 0):
         return True
     else:
