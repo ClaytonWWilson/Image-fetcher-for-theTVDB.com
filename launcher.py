@@ -1,13 +1,8 @@
-import os
-
-from login import login
-from actions import wait
-from actions import clearScreen
-from actions import clearFolders
-from actions import download
-from actions import installReqs
-from actions import refreshToken
-from actions import update
+from authentication import login
+from main import download
+from main import wait
+from utils import clearFolders
+from utils import clearScreen
 from search import search
 
 # TODO fix naming convention for all variables and functions
@@ -48,3 +43,4 @@ while True:
         wait()
     elif choice == "0":
         exit()
+

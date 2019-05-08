@@ -1,27 +1,18 @@
 import os
-import subprocess
 import shutil
-import json
-import datetime
-
 import requests
+import datetime
 import dateutil
+import json
+import subprocess
 
-from checks import checkTimestamp
-from checks import checkStatus
-from checks import getToken
+from utils import APIConnector
+
 
 # TODO add counters for number of images downloaded and deleted
 
 def wait():
     input("Press enter to continue.")
-
-def clearScreen():
-    IS_WINDOWS = os.name == "nt"
-    if IS_WINDOWS:
-        os.system("cls")
-    else:
-        os.system("clear")
 
 def refreshToken():
     if os.path.exists("login.json"):
@@ -85,26 +76,6 @@ def download(series):
     with open("out.json", "w") as out:
         out.write(json.dumps(json.loads(res.content)))
 
-
-def clearFolders():  # TODO implement this
-    folders = ["banner", "fanart", "poster"]
-    del_count = 0
-    for folder in folders:
-        if os.path.exists(folder):
-            image_list = os.listdir(folder)
-            if len(image_list) != 0:
-                print("Clearing " + folder + "/")
-                for x in image_list:  # TODO check if folder is empty
-                    print("Deleting {}/{}".format(folder, x))
-                    del_path = os.path.join(folder + "\\" + x)
-                    os.remove(del_path)
-                    del_count += 1
-                print()
-            else:
-                print("'{}' is already empty".format(folder))
-        else:
-            createFolder(folder)
-    print("Deleted {} images.\n".format(del_count))
 
 def createFolder(folder):  # TODO remove this
     os.makedirs(folder)

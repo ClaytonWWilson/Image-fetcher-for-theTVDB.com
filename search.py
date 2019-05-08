@@ -7,13 +7,10 @@ import re
 import requests
 import urllib.parse
 
-from actions import clearFolders
-from actions import clearScreen
-from actions import downloadImages
-from actions import refreshToken
-from actions import searchImages
-from checks import checkTimestamp
-from checks import checkStatus
+from utils import clearFolders
+from utils import clearScreen
+from authentication import checkTimestamp
+from authentication import checkStatus
 
 class Series:
     def __init__(self, folder_name, id, url):
