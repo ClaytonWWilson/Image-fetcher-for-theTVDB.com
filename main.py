@@ -7,6 +7,7 @@ import json
 import subprocess
 
 from utils import APIConnector
+from utils import create_file_name
 
 
 # TODO add counters for number of images downloaded and deleted
@@ -14,48 +15,8 @@ from utils import APIConnector
 def wait():
     input("Press enter to continue.")
 
-def refreshToken():
-    if os.path.exists("login.json"):
-        try:
-            with open("login.json") as json_data:
-                login = json.load(json_data)
-                save_time = dateutil.parser.parse(login["TIMESTAMP"])
-                cur_time = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
-                json_data.close()
 
-                LOGIN_DATA = {
-                    "apikey": login["API_KEY"],
-                    "userkey": login["USER_KEY"],
-                    "username": login["USER_NAME"]
-                }
-
-                if checkTimestamp(save_time, cur_time):
-                    while True:
-                        print("Your current token is still valid. Are you sure you want to grab a different one?")
-                        choice = input("(y/n) ")
-                        if choice is "n":
-                            break
-                        elif choice is "y":
-                            login["TOKEN"] = getToken(LOGIN_DATA)  # TODO find a better way to run this on both paths
-                            login["TIMESTAMP"] = str(datetime.datetime.now().replace(tzinfo=None))
-                            obj = open("login.json", "w")
-                            obj.write(json.dumps(login))
-                            obj.close()
-                            print("\nNew token acquired!\n")
-                            break
-                        clearScreen()
-                else:
-                    login["TOKEN"] = getToken(LOGIN_DATA)
-                    login["TIMESTAMP"] = str(datetime.datetime.now().replace(tzinfo=None))
-                    obj = open("login.json", "w")
-                    obj.write(json.dumps(login))
-                    obj.close()
-                    print("New token acquired!\n")
-        except Exception as e:
-            print("You need to log in first. Select Login/Change login.\n")  # TODO make a set of constants for error codes
-    else:
-        print("You need to log in first. Select Login/Change login.\n")
-
+# Downloads all data for a series
 def download(series):
     # Create downloads folder
     if not os.path.exists("downloads"):
@@ -68,17 +29,49 @@ def download(series):
     # Create series folder
     os.makedirs(os.path.join("downloads", series.folder_name))
 
-    api_path = "https://api.thetvdb.com/series/" + series.id
-
     api_con = APIConnector()
+
+    # Download series text data to info.json
+    api_path = "https://api.thetvdb.com/series/{}".format(series.id)
+    res = api_con.send_http_req(api_path)
+    
+    info_path = os.path.join("downloads", series.folder_name, "info.json")
+
+    with open(info_path, 'wb') as f:
+        f.write(res.content)
+    
+    # Make a folder for actors
+    actors_folder_path = os.path.join("downloads", series.folder_name, "actors")
+    os.makedirs(actors_folder_path)
+
+    # Download actors to actors.json
+    api_path = "https://api.thetvdb.com/series/{}/actors".format(series.id)
     res = api_con.send_http_req(api_path)
 
-    with open("out.json", "w") as out:
-        out.write(json.dumps(json.loads(res.content)))
+    actors_path = os.path.join("downloads", series.folder_name, "actors", "actors.json")
+
+    with open(actors_path, 'wb') as f:
+        f.write(res.content)
+
+    # Make folder for actor profile images
+    actors_profile_folder_path = os.path.join("downloads", series.folder_name, "actors", "profiles")
+    os.makedirs(actors_profile_folder_path)
+
+    # Download each actor's profile picture and save it as their name
+    for actor in json.loads(res.content)["data"]:
+        name = create_file_name(actor["name"])
+        
+        # Check if there is an image for the actor
+        if actor["image"] != "":
+            print("downloading " + actor["image"])
+            img_res = requests.get("https://www.thetvdb.com/banners/" + actor["image"])
+            with open(os.path.join(actors_profile_folder_path, name + '_' + str(actor["id"]) + ".jpg"), 'wb') as f:
+                f.write(img_res.content)
+        else:
+            # Use a default image if one does not exist on theTVDB.com
+            shutil.copyfile(os.path.join("resources", "default_person.jpg"), os.path.join(actors_profile_folder_path, name + '_' + str(actor["id"]) + ".jpg"))
 
 
-def createFolder(folder):  # TODO remove this
-    os.makedirs(folder)
 
 
 def searchImages(id_num, keyType, authHeaders):  # This is getting a list of file info for images in json format

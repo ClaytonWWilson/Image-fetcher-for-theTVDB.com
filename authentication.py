@@ -1,8 +1,10 @@
 import json
 import os.path
 import datetime
-
+import requests
 import dateutil.parser
+
+from utils import clearScreen
 
 
 def login():
@@ -81,6 +83,48 @@ def getToken(data):#TODO add a timeout and try catch to all requests
         return token
     else:
         return ""
+
+def refreshToken():
+    if os.path.exists("login.json"):
+        try:
+            with open("login.json") as json_data:
+                login = json.load(json_data)
+                save_time = dateutil.parser.parse(login["TIMESTAMP"])
+                cur_time = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
+                json_data.close()
+
+                LOGIN_DATA = {
+                    "apikey": login["API_KEY"],
+                    "userkey": login["USER_KEY"],
+                    "username": login["USER_NAME"]
+                }
+
+                if checkTimestamp(save_time, cur_time):
+                    while True:
+                        print("Your current token is still valid. Are you sure you want to grab a different one?")
+                        choice = input("(y/n) ")
+                        if choice is "n":
+                            break
+                        elif choice is "y":
+                            login["TOKEN"] = getToken(LOGIN_DATA)  # TODO find a better way to run this on both paths
+                            login["TIMESTAMP"] = str(datetime.datetime.now().replace(tzinfo=None))
+                            obj = open("login.json", "w")
+                            obj.write(json.dumps(login))
+                            obj.close()
+                            print("\nNew token acquired!\n")
+                            break
+                        clearScreen()
+                else:
+                    login["TOKEN"] = getToken(LOGIN_DATA)
+                    login["TIMESTAMP"] = str(datetime.datetime.now().replace(tzinfo=None))
+                    obj = open("login.json", "w")
+                    obj.write(json.dumps(login))
+                    obj.close()
+                    print("New token acquired!\n")
+        except Exception as e:
+            print("You need to log in first. Select Login/Change login.\n")  # TODO make a set of constants for error codes
+    else:
+        print("You need to log in first. Select Login/Change login.\n")
 
 def checkStatus(response, v):
     if (response.status_code != 200):

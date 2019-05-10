@@ -9,20 +9,16 @@ import urllib.parse
 
 from utils import clearFolders
 from utils import clearScreen
+from utils import create_file_name
 from authentication import checkTimestamp
 from authentication import checkStatus
+from authentication import refreshToken
 
 class Series:
     def __init__(self, folder_name, id, url):
         self.folder_name = folder_name
         self.id = str(id)
         self.url = url
-
-# Clears out all illegal filename characters from the string
-def create_folder_name(string):
-    string = string.strip().replace(' ', '_')
-    string = re.sub(r'(?u)[^-\w.]', '', string)
-    return string
     
 
 def search():
@@ -100,7 +96,7 @@ def search():
 
         print()
 
-    series = Series(create_folder_name(search_results["data"][title]["seriesName"]), search_results["data"][title]["id"], "https://www.thetvdb.com/series/" + search_results["data"][title]["slug"])
+    series = Series(create_file_name(search_results["data"][title]["seriesName"]), search_results["data"][title]["id"], "https://www.thetvdb.com/series/" + search_results["data"][title]["slug"])
     return series
 
     # id_num = search_results["data"][title]["id"]               # Setting up the request urls

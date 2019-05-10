@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import requests
 
 
@@ -43,7 +44,7 @@ def clearFolders():  # TODO implement this
             else:
                 print("'{}' is already empty".format(folder))
         else:
-            createFolder(folder)
+            os.makedirs(folder)
     print("Deleted {} images.\n".format(del_count))
 
 def clearScreen():
@@ -52,3 +53,9 @@ def clearScreen():
         os.system("cls")
     else:
         os.system("clear")
+
+# Clears out all illegal filename characters from the string
+def create_file_name(string):
+    string = string.strip().replace(' ', '_')
+    string = re.sub(r'(?u)[^-\w.]', '', string)
+    return string

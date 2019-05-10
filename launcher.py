@@ -36,10 +36,12 @@ while True:
         login()
         wait()
     elif choice == "4":
-        installReqs()
+        # installReqs()
+        print("Not implemented")
         wait()
     elif choice == "5":
-        update()
+        # update()
+        print("Not implemented")
         wait()
     elif choice == "0":
         exit()
