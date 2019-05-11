@@ -56,6 +56,6 @@ def clearScreen():
 
 # Clears out all illegal filename characters from the string
 def create_file_name(string):
-    string = string.strip().replace(' ', '_')
-    string = re.sub(r'(?u)[^-\w.]', '', string)
+    string = string.strip()
+    string = re.sub(r'(?u)[^-\w. ]', '', string)
     return string

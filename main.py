@@ -3,6 +3,7 @@ import shutil
 import requests
 import datetime
 import dateutil
+from bs4 import BeautifulSoup
 import json
 import subprocess
 
@@ -24,52 +25,83 @@ def download(series):
     
     # Remove previously downloaded content for this series if it exists
     if os.path.exists(os.path.join("downloads", series.folder_name)):
-        shutil.rmtree(os.path.join("downloads", series.folder_name))
+        # BUG Sometimes this call will not remove the entire folder, causing crashes to occur with makedirs
+        shutil.rmtree(os.path.join("downloads", series.folder_name), ignore_errors=True)
 
     # Create series folder
-    os.makedirs(os.path.join("downloads", series.folder_name))
+    os.makedirs(os.path.join("downloads", series.folder_name), exist_ok=True)
 
     api_con = APIConnector()
 
-    # Download series text data to info.json
-    api_path = "https://api.thetvdb.com/series/{}".format(series.id)
-    res = api_con.send_http_req(api_path)
+    # # Download series text data to info.json
+    # api_path = "https://api.thetvdb.com/series/{}".format(series.id)
+    # res = api_con.send_http_req(api_path)
     
-    info_path = os.path.join("downloads", series.folder_name, "info.json")
+    # info_path = os.path.join("downloads", series.folder_name, "info.json")
 
-    with open(info_path, 'wb') as f:
-        f.write(res.content)
+    # with open(info_path, 'wb') as f:
+    #     f.write(res.content)
     
-    # Make a folder for actors
-    actors_folder_path = os.path.join("downloads", series.folder_name, "actors")
-    os.makedirs(actors_folder_path)
+    # # Make a folder for actors
+    # actors_folder_path = os.path.join("downloads", series.folder_name, "actors")
+    # os.makedirs(actors_folder_path)
 
-    # Download actors to actors.json
-    api_path = "https://api.thetvdb.com/series/{}/actors".format(series.id)
-    res = api_con.send_http_req(api_path)
+    # # Download actors to actors.json
+    # api_path = "https://api.thetvdb.com/series/{}/actors".format(series.id)
+    # res = api_con.send_http_req(api_path)
 
-    actors_path = os.path.join("downloads", series.folder_name, "actors", "actors.json")
+    # actors_path = os.path.join("downloads", series.folder_name, "actors", "actors.json")
 
-    with open(actors_path, 'wb') as f:
-        f.write(res.content)
+    # with open(actors_path, 'wb') as f:
+    #     f.write(res.content)
 
-    # Make folder for actor profile images
-    actors_profile_folder_path = os.path.join("downloads", series.folder_name, "actors", "profiles")
-    os.makedirs(actors_profile_folder_path)
+    # # Make folder for actor profile images
+    # actors_profile_folder_path = os.path.join("downloads", series.folder_name, "actors", "profiles")
+    # os.makedirs(actors_profile_folder_path)
 
-    # Download each actor's profile picture and save it as their name
-    for actor in json.loads(res.content)["data"]:
-        name = create_file_name(actor["name"])
+    # # Download each actor's profile picture and save it as their name
+    # for actor in json.loads(res.content)["data"]:
+    #     name = create_file_name(actor["name"])
         
-        # Check if there is an image for the actor
-        if actor["image"] != "":
-            print("downloading " + actor["image"])
-            img_res = requests.get("https://www.thetvdb.com/banners/" + actor["image"])
-            with open(os.path.join(actors_profile_folder_path, name + '_' + str(actor["id"]) + ".jpg"), 'wb') as f:
-                f.write(img_res.content)
-        else:
-            # Use a default image if one does not exist on theTVDB.com
-            shutil.copyfile(os.path.join("resources", "default_person.jpg"), os.path.join(actors_profile_folder_path, name + '_' + str(actor["id"]) + ".jpg"))
+    #     # Check if there is an image for the actor
+    #     if actor["image"] != "":
+    #         print("downloading " + actor["image"])
+    #         img_res = requests.get("https://www.thetvdb.com/banners/" + actor["image"])
+    #         with open(os.path.join(actors_profile_folder_path, name + '_' + str(actor["id"]) + ".jpg"), 'wb') as f:
+    #             f.write(img_res.content)
+    #     else:
+    #         # Use a default image if one does not exist on theTVDB.com
+    #         shutil.copyfile(os.path.join("resources", "default_person.jpg"), os.path.join(actors_profile_folder_path, name + '_' + str(actor["id"]) + ".jpg"))
+
+    # # Make a folder for episodes
+    # episodes_folder_path = os.path.join("downloads", series.folder_name, "episodes")
+    # os.makedirs(episodes_folder_path)
+
+
+    # # Get number of seasons
+    # api_path = "https://api.thetvdb.com/series/{}/episodes/summary".format(series.id)
+    # res = api_con.send_http_req(api_path)
+    # seasons = json.loads(res.content)["data"]["airedSeasons"]
+
+    # # Create a folder for each season
+    # for season in seasons:
+    #     season_folder_path = os.path.join(episodes_folder_path, "Season " + season)
+    #     os.makedirs(season_folder_path)
+
+    # # Download episode info to episodes.json
+    # api_path = "https://api.thetvdb.com/series/{}/episodes".format(series.id)
+    # res = api_con.send_http_req(api_path)
+    # with open(os.path.join(episodes_folder_path, "episodes.json"), 'wb') as f:
+    #     f.write(res.content)
+
+    # # Seperate episode data into individual json files for each episode and download episode thumbnails
+    # for episode in json.loads(res.content)["data"]:
+    #     episode_path = os.path.join(episodes_folder_path, "Season " + str(episode["airedSeason"]), "Episode {} - {}".format(str(episode["airedEpisodeNumber"]), episode["episodeName"]))
+    #     img_res = requests.get("https://www.thetvdb.com/banners/" + episode["filename"])
+    #     with open(episode_path + ".json", 'w') as f:
+    #         f.write(json.dumps(episode))
+    #     with open(episode_path + ".jpg", 'wb') as f:
+    #         f.write(img_res.content)
 
 
 
