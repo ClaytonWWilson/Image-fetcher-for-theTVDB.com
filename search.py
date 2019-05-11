@@ -98,15 +98,3 @@ def search():
 
     series = Series(create_file_name(search_results["data"][title]["seriesName"]), search_results["data"][title]["id"], "https://www.thetvdb.com/series/" + search_results["data"][title]["slug"])
     return series
-
-    # id_num = search_results["data"][title]["id"]               # Setting up the request urls
-    # fanart = searchImages(id_num, FAN_KEY_TYPE, authHeaders)   # for banners, fanart, and posters
-    # poster = searchImages(id_num, POS_KEY_TYPE, authHeaders)
-    # banner = searchImages(id_num, BAN_KEY_TYPE, authHeaders)
-
-    # clearFolders()
-    # downloadImages("fanart", fanart, id_num)  # TODO find a better way to pass these variables. Constructor?
-    # downloadImages("poster", poster, id_num)
-    # downloadImages("banner", banner, id_num)
-    # print("\nAll downloads finished!\n")
-    # return None
