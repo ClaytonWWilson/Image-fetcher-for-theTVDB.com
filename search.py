@@ -39,11 +39,6 @@ def search():
         print("There was an error checking your login. Try logging in again with 'Login/Change login'.")
         return None
 
-    # All login checks pass and search starts
-    FAN_KEY_TYPE = "?keyType=fanart"  # These are used in the search strings
-    POS_KEY_TYPE = "?keyType=poster"
-    BAN_KEY_TYPE = "?keyType=series"
-
     authHeaders = {
         "Content-Type": "application/json",
         "Accept": "application/json",

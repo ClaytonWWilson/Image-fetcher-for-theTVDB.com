@@ -37,7 +37,7 @@ def login():
             tmp_user_key = input("Enter your Unique ID: ")
         while tmp_api_key is "":
             tmp_api_key = input("Enter your API Key: ")
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         print("\n")
         return
 
@@ -121,7 +121,7 @@ def refreshToken():
                     obj.write(json.dumps(login))
                     obj.close()
                     print("New token acquired!\n")
-        except Exception as e:
+        except Exception:
             print("You need to log in first. Select Login/Change login.\n")  # TODO make a set of constants for error codes
     else:
         print("You need to log in first. Select Login/Change login.\n")
