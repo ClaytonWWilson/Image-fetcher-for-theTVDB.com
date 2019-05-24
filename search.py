@@ -7,10 +7,11 @@ import re
 import requests
 import urllib.parse
 
+from utils import APIConnector
 from utils import clearFolders
 from utils import clearScreen
 from utils import create_file_name
-from authentication import checkTimestamp
+from authentication import check_timestamp
 from authentication import checkStatus
 from authentication import refreshToken
 
@@ -23,27 +24,29 @@ class Series:
 
 def search():
     try:
-        with open("login.json") as json_data:  # TODO add a check for a login that is damaged/modified
+        with open("login.json") as json_data:
             login = json.load(json_data)
-            json_data.close()
+            # json_data.close()
             if login["TIMESTAMP"] == "":
                 print("There was an error checking your login. Try logging in again with 'Login/Change login'.")
                 return None
             else:
                 save_time = dateutil.parser.parse(login["TIMESTAMP"])
                 cur_time = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
-                if checkTimestamp(save_time, cur_time) == False:
+                if check_timestamp(save_time, cur_time) == False:
                     refreshToken()
     except Exception as ex:
         # print(ex)
         print("There was an error checking your login. Try logging in again with 'Login/Change login'.")
         return None
 
-    authHeaders = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": "Bearer " + login["TOKEN"]
-    }
+    api_con = APIConnector()
+
+    # authHeaders = {
+    #     "Content-Type": "application/json",
+    #     "Accept": "application/json",
+    #     "Authorization": "Bearer " + login["TOKEN"]
+    # }
 
     keyword = input("Enter series name to search: ")  # Getting the search name and fixing
     s_keyword = urllib.parse.quote(keyword)      # the url parse mistakes
@@ -56,13 +59,16 @@ def search():
     s_keyword = s_keyword.replace("/", "%2F")
     s_keyword = s_keyword.replace("%7E", "~")
 
-    search_url = "https://api.thetvdb.com/search/series?name={}".format(s_keyword)
-    response = requests.get(search_url, headers=authHeaders)
+    # search_url = "https://api.thetvdb.com/search/series?name={}".format(s_keyword)
+    # response = requests.get(search_url, headers=authHeaders)
 
-    if (checkStatus(response, True) == False):
-        return None
+    res = api_con.send_http_req(
+        "https://api.thetvdb.com/search/series?name={}".format(s_keyword))
 
-    search_results = json.loads(response.content)
+    # if (checkStatus(response, True) == False):
+    #     return None
+
+    search_results = json.loads(res.content)
 
     title = -1
     print()

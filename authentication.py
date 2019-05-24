@@ -65,15 +65,15 @@ def login():
 # TODO at startup, check token for validity and remove it if it is expired
 
 
-def getToken(data):#TODO add a timeout and try catch to all requests
+def getToken(login_data): #TODO add a timeout and try catch to all requests
     url = "https://api.thetvdb.com/login"
     headers = {
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
     try:
-        response = requests.post(url, data=json.dumps(data), headers=headers)
-    except requests.exceptions.ConnectionError as e:
+        response = requests.post(url, data=json.dumps(login_data), headers=headers)
+    except requests.exceptions.ConnectionError:
         print("An error occurred. Please check your internet and try again.")
         quit()
 
@@ -99,7 +99,7 @@ def refreshToken():
                     "username": login["USER_NAME"]
                 }
 
-                if checkTimestamp(save_time, cur_time):
+                if check_timestamp(save_time, cur_time):
                     while True:
                         print("Your current token is still valid. Are you sure you want to grab a different one?")
                         choice = input("(y/n) ")
@@ -137,8 +137,9 @@ def checkStatus(response, v):
     else:
         return True
 
-# Returns true if the token is still valid
-def checkTimestamp(save_time, cur_time):
+# Returns true if the token is still valid.
+# Tokens expire after 24 hours
+def check_timestamp(save_time, cur_time):
     if cur_time - save_time < datetime.timedelta(0, 86100, 0):
         return True
     else:
