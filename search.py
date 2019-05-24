@@ -8,7 +8,7 @@ import requests
 import urllib.parse
 
 from utils import APIConnector
-from utils import clearFolders
+from utils import clear_downloads
 from utils import clearScreen
 from utils import create_file_name
 from authentication import check_timestamp

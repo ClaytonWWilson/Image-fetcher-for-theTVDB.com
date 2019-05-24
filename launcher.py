@@ -1,7 +1,7 @@
 from authentication import login
 from main import download
 from main import wait
-from utils import clearFolders
+from utils import clear_downloads
 from utils import clearScreen
 from search import search
 
@@ -14,7 +14,7 @@ while True:
           "=============================\n")
 
     print("1. Search theTVDB.com")
-    print("2. Clear download folders")
+    print("2. Clear downloaded data")
     print("3. Login/Change login")
     print("4. Install Requirements")
     print("5. Check for updates\n")
@@ -29,7 +29,7 @@ while True:
         wait()
     elif choice == "2":
         clearScreen()
-        clearFolders()
+        clear_downloads()
         wait()
     elif choice == "3":  # TODO add a printout that tells the user who is currently logged in
         clearScreen()
