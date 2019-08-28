@@ -5,7 +5,7 @@ import requests
 import shutil
 
 
-
+# Handles all communication to the API
 class APIConnector:
     def __init__(self):
         with open("login.json", "r") as f:
@@ -28,7 +28,49 @@ class APIConnector:
     def send_http_req(self, api_path):
         return requests.get(api_path, headers=self.auth_headers)
 
-# recursively counts the number of folders and files in the download folder
+# Simple progress bar for long file download operations
+class ProgressBar:
+    def __init__(self, size, counter=None):
+        self.size = int(size)
+
+        # Creating the bar array which will be the visual representation of the progress bar
+        self.bar_array = []
+        for i in range(0, 21):
+            bar = ''
+            bar += '['
+            j = -1
+            for j in range(0, i):
+                bar += '='
+            for k in range(j, 19):
+                bar += ' '
+            bar += ']'
+            self.bar_array.append(bar)
+
+        if counter is None:
+            self.counter = 0
+        else:
+            self.counter = int(counter)
+            if self.counter < 0 or self.counter > self.size:
+                raise IndexError("ProgressBar counter out of bounds.")
+
+    def increment(self):
+        self.counter += 1
+        if (self.counter > self.size):
+            raise IndexError("ProgressBar counter out of bounds.")
+
+    def get_percent(self):
+        return int((self.counter / self.size) * 100)
+
+    def to_string(self):
+        return self.bar_array[int((self.counter / self.size) * 20)]
+
+    def print(self):
+        print(self.to_string())
+
+
+
+# Recursively counts the number of folders and files in the download folder.
+# It's used for displaying stats on how much is in the "downloads" folder
 stats = [-1, 0] # [folders, files] Start at -1 to ignore the "downloads" folder itself
 def stat_downloads(path):
     if os.path.isfile(path):
@@ -72,27 +114,8 @@ def clear_downloads():
         print("Deleted {} series, {} folders, and {} files totaling {}".format(series_count, counts[0], counts[1], total_size_str))
     else:
         print("There isn't anything to delete.")
-    
-    # folders = ["banner", "fanart", "poster"]
-    # del_count = 0
-    # for folder in folders:
-    #     if os.path.exists(folder):
-    #         image_list = os.listdir(folder)
-    #         if len(image_list) != 0:
-    #             print("Clearing " + folder + "/")
-    #             for x in image_list:  # TODO check if folder is empty
-    #                 print("Deleting {}/{}".format(folder, x))
-    #                 del_path = os.path.join(folder + "\\" + x)
-    #                 os.remove(del_path)
-    #                 del_count += 1
-    #             print()
-    #         else:
-    #             print("'{}' is already empty".format(folder))
-    #     else:
-    #         os.makedirs(folder)
-    # print("Deleted {} images.\n".format(del_count))
 
-def clearScreen():
+def clear_screen():
     IS_WINDOWS = os.name == "nt"
     if IS_WINDOWS:
         os.system("cls")

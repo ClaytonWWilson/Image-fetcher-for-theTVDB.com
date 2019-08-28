@@ -4,7 +4,7 @@ import datetime
 import requests
 import dateutil.parser
 
-from utils import clearScreen
+from utils import clear_screen
 
 
 def login():
@@ -113,7 +113,7 @@ def refreshToken():
                             obj.close()
                             print("\nNew token acquired!\n")
                             break
-                        clearScreen()
+                        clear_screen()
                 else:
                     login["TOKEN"] = getToken(LOGIN_DATA)
                     login["TIMESTAMP"] = str(datetime.datetime.now().replace(tzinfo=None))

@@ -9,14 +9,15 @@ import urllib.parse
 
 from utils import APIConnector
 from utils import clear_downloads
-from utils import clearScreen
+from utils import clear_screen
 from utils import create_file_name
 from authentication import check_timestamp
 from authentication import checkStatus
 from authentication import refreshToken
 
 class Series:
-    def __init__(self, folder_name, id, url):
+    def __init__(self, name, folder_name, id, url):
+        self.name = name
         self.folder_name = folder_name
         self.id = str(id)
         self.url = url
@@ -33,7 +34,8 @@ def search():
             else:
                 save_time = dateutil.parser.parse(login["TIMESTAMP"])
                 cur_time = datetime.datetime.now().replace(tzinfo=None)  # TODO use UTC time?
-                if check_timestamp(save_time, cur_time) == False:
+                if check_timestamp(save_time, cur_time) == False: # Token is expired
+                    print("Your token has expired. Attempting to get a new one...")
                     refreshToken()
     except Exception as ex:
         # print(ex)
@@ -72,7 +74,7 @@ def search():
 
     title = -1
     print()
-    clearScreen()
+    clear_screen()
     while title < 0 or title > len(search_results["data"]) - 1:  # Looping until the user chooses
         print("Results:")                                        # a series from the printed list
         count = 1                                                # or they input '0' to cancel
@@ -97,5 +99,5 @@ def search():
 
         print()
 
-    series = Series(create_file_name(search_results["data"][title]["seriesName"]), search_results["data"][title]["id"], "https://www.thetvdb.com/series/" + search_results["data"][title]["slug"])
+    series = Series(search_results["data"][title]["seriesName"], create_file_name(search_results["data"][title]["seriesName"]), search_results["data"][title]["id"], "https://www.thetvdb.com/series/" + search_results["data"][title]["slug"])
     return series

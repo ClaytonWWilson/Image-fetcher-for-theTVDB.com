@@ -2,13 +2,13 @@ from authentication import login
 from main import download
 from main import wait
 from utils import clear_downloads
-from utils import clearScreen
+from utils import clear_screen
 from search import search
 
 # TODO fix naming convention for all variables and functions
 
 while True:
-    clearScreen()
+    clear_screen()
     print("=============================\n"
           "Image fetcher for theTVDB.com\n"
           "=============================\n")
@@ -23,16 +23,16 @@ while True:
     choice = input("> ").lower().strip()
 
     if choice == "1":  # TODO catch KeyboardInterrupt at search
-        series = search()
+        series = search() # BUG Searching for 'one punc' causes a keyerror when reading the 'data' key
         if series != None:
             download(series)
         wait()
     elif choice == "2":
-        clearScreen()
+        clear_screen()
         clear_downloads()
         wait()
     elif choice == "3":  # TODO add a printout that tells the user who is currently logged in
-        clearScreen()
+        clear_screen()
         login()
         wait()
     elif choice == "4":
